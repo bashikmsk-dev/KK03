@@ -216,6 +216,68 @@
     });
   }
 
+  /* --- Фон из «плывущих» кривых -------------------------------------------
+     Порт эффекта Background Paths: два зеркальных набора по 36 кривых,
+     по каждой бесконечно бежит светящийся штрих. Разметка генерируется здесь,
+     чтобы не тащить в HTML 72 длинных атрибута d. */
+  function initFloatingPaths() {
+    const hosts = $$('[data-paths]');
+    if (!hosts.length) return;
+    const NS = 'http://www.w3.org/2000/svg';
+
+    hosts.forEach((host) => {
+      if (host.dataset.paths === 'done') return;
+      [1, -1].forEach((position) => {
+        const svg = document.createElementNS(NS, 'svg');
+        svg.setAttribute('viewBox', '0 0 696 316');
+        svg.setAttribute('fill', 'none');
+        svg.setAttribute('aria-hidden', 'true');
+
+        /* Шаг 3 вместо 1: веер тот же, что в оригинале (индексы 0…33), но кривых
+           втрое меньше. Анимация штриха перерисовывает всю площадь каждый кадр,
+           и на полном наборе из 72 линий слабые машины не успевают её растрировать. */
+        for (let i = 0; i < 36; i += 3) {
+          const shift = i * 5 * position;
+          const path = document.createElementNS(NS, 'path');
+          path.setAttribute(
+            'd',
+            `M-${380 - shift} -${189 + i * 6}C-${380 - shift} -${189 + i * 6} -${312 - shift} ${
+              216 - i * 6
+            } ${152 - shift} ${343 - i * 6}C${616 - shift} ${470 - i * 6} ${684 - shift} ${
+              875 - i * 6
+            } ${684 - shift} ${875 - i * 6}`
+          );
+          path.setAttribute('stroke', 'currentColor');
+          path.setAttribute('stroke-width', (0.5 + i * 0.03).toFixed(2));
+          path.setAttribute('stroke-opacity', (0.1 + i * 0.03).toFixed(2));
+          path.setAttribute('pathLength', '1');
+          if (!reduced) {
+            path.style.animationDuration = `${(20 + Math.random() * 10).toFixed(1)}s`;
+            path.style.animationDelay = `-${(Math.random() * 24).toFixed(1)}s`;
+          }
+          svg.appendChild(path);
+        }
+        host.appendChild(svg);
+      });
+      host.dataset.paths = 'done';
+    });
+
+    /* Анимация крутится только пока секция на экране. */
+    if (reduced || !('IntersectionObserver' in window)) {
+      if (!reduced) hosts.forEach((host) => host.classList.add('is-running'));
+      return;
+    }
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          entry.target.classList.toggle('is-running', entry.isIntersecting);
+        });
+      },
+      { rootMargin: '200px 0px' }
+    );
+    hosts.forEach((host) => io.observe(host));
+  }
+
   /* --- Язык: запоминаем выбор пользователя -------------------------------- */
   function initLang() {
     $$('.lang a').forEach((link) => {
@@ -281,6 +343,7 @@
     initNominations();
     initMarquee();
     initParallax();
+    initFloatingPaths();
     initCursor();
     initScramble();
     initLang();
