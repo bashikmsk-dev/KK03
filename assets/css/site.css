@@ -270,8 +270,9 @@ body::after {
   gap: 0.7rem;
   flex: 0 0 auto;
 }
+/* Знак горизонтальный (лента плёнки), поэтому шире, чем был квадратный плейсхолдер */
 .brand img {
-  width: clamp(30px, 3.4vw, 46px);
+  width: clamp(44px, 4.4vw, 68px);
   height: auto;
 }
 .brand span {
