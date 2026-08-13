@@ -259,59 +259,182 @@
   function initFloatingPaths() {
     const hosts = $$('[data-paths]');
     if (!hosts.length) return;
-    const NS = 'http://www.w3.org/2000/svg';
+
+    const VB = { w: 696, h: 316 };      // система координат из исходного компонента
+    const PER_SET = 36;                 // столько же кривых, сколько в оригинале
+    const DPR_CAP = 2;
+
+    /* Две контрольные точки кривой смещаются по x в одну сторону, остальные —
+       в другую, поэтому веер именно расходится, а не едет целиком. */
+    const curve = (i, position) => {
+      const s = i * 5 * position;
+      const y = i * 6;
+      return [
+        [-(380 - s), -(189 + y)],
+        [-(380 - s), -(189 + y)],
+        [-(312 - s), 216 - y],
+        [152 - s, 343 - y],
+        [616 - s, 470 - y],
+        [684 - s, 875 - y],
+        [684 - s, 875 - y],
+      ];
+    };
+
+    /* Длину каждой кривой замеряем один раз через SVG: в canvas такого API нет,
+       а штрих задаётся долями длины. */
+    const measure = (pts) => {
+      const NS = 'http://www.w3.org/2000/svg';
+      const svg = document.createElementNS(NS, 'svg');
+      svg.setAttribute('width', '0');
+      svg.setAttribute('height', '0');
+      svg.style.cssText = 'position:absolute;visibility:hidden;pointer-events:none';
+      const path = document.createElementNS(NS, 'path');
+      path.setAttribute(
+        'd',
+        `M${pts[0]} C${pts[1]} ${pts[2]} ${pts[3]} C${pts[4]} ${pts[5]} ${pts[6]}`
+      );
+      svg.appendChild(path);
+      document.body.appendChild(svg);
+      const len = path.getTotalLength();
+      svg.remove();
+      return len;
+    };
 
     hosts.forEach((host) => {
       if (host.dataset.paths === 'done') return;
-      [1, -1].forEach((position) => {
-        const svg = document.createElementNS(NS, 'svg');
-        svg.setAttribute('viewBox', '0 0 696 316');
-        svg.setAttribute('fill', 'none');
-        svg.setAttribute('aria-hidden', 'true');
-
-        /* Шаг 3 вместо 1: веер тот же, что в оригинале (индексы 0…33), но кривых
-           втрое меньше. Анимация штриха перерисовывает всю площадь каждый кадр,
-           и на полном наборе из 72 линий слабые машины не успевают её растрировать. */
-        for (let i = 0; i < 36; i += 3) {
-          const shift = i * 5 * position;
-          const path = document.createElementNS(NS, 'path');
-          path.setAttribute(
-            'd',
-            `M-${380 - shift} -${189 + i * 6}C-${380 - shift} -${189 + i * 6} -${312 - shift} ${
-              216 - i * 6
-            } ${152 - shift} ${343 - i * 6}C${616 - shift} ${470 - i * 6} ${684 - shift} ${
-              875 - i * 6
-            } ${684 - shift} ${875 - i * 6}`
-          );
-          path.setAttribute('stroke', 'currentColor');
-          path.setAttribute('stroke-width', (0.5 + i * 0.03).toFixed(2));
-          path.setAttribute('stroke-opacity', (0.1 + i * 0.03).toFixed(2));
-          path.setAttribute('pathLength', '1');
-          if (!reduced) {
-            path.style.animationDuration = `${(20 + Math.random() * 10).toFixed(1)}s`;
-            path.style.animationDelay = `-${(Math.random() * 24).toFixed(1)}s`;
-          }
-          svg.appendChild(path);
-        }
-        host.appendChild(svg);
-      });
       host.dataset.paths = 'done';
-    });
 
-    /* Анимация крутится только пока секция на экране. */
-    if (reduced || !('IntersectionObserver' in window)) {
-      if (!reduced) hosts.forEach((host) => host.classList.add('is-running'));
-      return;
-    }
-    const io = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          entry.target.classList.toggle('is-running', entry.isIntersecting);
+      const canvas = document.createElement('canvas');
+      canvas.setAttribute('aria-hidden', 'true');
+      host.appendChild(canvas);
+      const ctx = canvas.getContext('2d');
+      if (!ctx) return;
+
+      const lines = [];
+      [1, -1].forEach((position) => {
+        for (let i = 0; i < PER_SET; i += 1) {
+          const pts = curve(i, position);
+          lines.push({
+            pts,
+            len: measure(pts),
+            width: 0.5 + i * 0.03,
+            alpha: Math.min(1, 0.1 + i * 0.03),
+            speed: 1 / (20 + Math.random() * 10),   // полный проход штриха за 20–30 с
+            phase: Math.random(),
+          });
+        }
+      });
+
+      let dpr = 1;
+      let scale = 1;
+      let offset = { x: 0, y: 0 };
+      let color = '#08080a';
+
+      const resize = () => {
+        const rect = host.getBoundingClientRect();
+        if (!rect.width || !rect.height) return false;
+        dpr = Math.min(window.devicePixelRatio || 1, DPR_CAP);
+        canvas.width = Math.round(rect.width * dpr);
+        canvas.height = Math.round(rect.height * dpr);
+        canvas.style.width = `${rect.width}px`;
+        canvas.style.height = `${rect.height}px`;
+        /* Та же вписка, что делал SVG с preserveAspectRatio="xMidYMid meet". */
+        scale = Math.min(rect.width / VB.w, rect.height / VB.h);
+        offset = {
+          x: (rect.width - VB.w * scale) / 2,
+          y: (rect.height - VB.h * scale) / 2,
+        };
+        color = getComputedStyle(host).color || color;
+        return true;
+      };
+
+      const draw = (time) => {
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.save();
+        ctx.translate(offset.x, offset.y);
+        ctx.scale(scale, scale);
+        ctx.strokeStyle = color;
+        ctx.lineCap = 'round';
+
+        lines.forEach((line) => {
+          const [p0, c1, c2, p1, c3, c4, p2] = line.pts;
+          ctx.beginPath();
+          ctx.moveTo(p0[0], p0[1]);
+          ctx.bezierCurveTo(c1[0], c1[1], c2[0], c2[1], p1[0], p1[1]);
+          ctx.bezierCurveTo(c3[0], c3[1], c4[0], c4[1], p2[0], p2[1]);
+          ctx.lineWidth = line.width;
+          const t = (time * line.speed + line.phase) % 1;
+          ctx.globalAlpha = line.alpha * (0.55 + 0.45 * Math.sin(t * Math.PI * 2));
+          ctx.setLineDash([line.len * 0.62, line.len * 0.38]);
+          ctx.lineDashOffset = -line.len * t;
+          ctx.stroke();
         });
-      },
-      { rootMargin: '200px 0px' }
-    );
-    hosts.forEach((host) => io.observe(host));
+
+        ctx.restore();
+        ctx.globalAlpha = 1;
+      };
+
+      let raf = 0;
+      let running = false;
+      const tick = (now) => {
+        draw(now / 1000);
+        raf = running ? requestAnimationFrame(tick) : 0;
+      };
+      const start = () => {
+        if (running || reduced) return;
+        running = true;
+        raf = requestAnimationFrame(tick);
+      };
+      const stop = () => {
+        running = false;
+        if (raf) cancelAnimationFrame(raf);
+        raf = 0;
+      };
+
+      if (!resize()) return;
+      draw(0);
+
+      /* Высота секции меняется после загрузки шрифтов и при переносах строк,
+         поэтому размер холста отслеживаем у самого блока, а не у окна. */
+      const refresh = () => {
+        if (resize()) draw(performance.now() / 1000);
+      };
+      if ('ResizeObserver' in window) {
+        let pending = 0;
+        new ResizeObserver(() => {
+          if (pending) return;
+          pending = requestAnimationFrame(() => {
+            pending = 0;
+            refresh();
+          });
+        }).observe(host);
+      } else {
+        let resizeTimer = 0;
+        window.addEventListener(
+          'resize',
+          () => {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(refresh, 150);
+          },
+          { passive: true }
+        );
+      }
+      if (document.fonts && document.fonts.ready) document.fonts.ready.then(refresh);
+
+      /* Кадры считаются только пока секция на экране. */
+      if (reduced) return;
+      if (!('IntersectionObserver' in window)) {
+        start();
+        return;
+      }
+      new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => (entry.isIntersecting ? start() : stop()));
+        },
+        { rootMargin: '200px 0px' }
+      ).observe(host);
+    });
   }
 
   /* --- Язык: запоминаем выбор пользователя -------------------------------- */
