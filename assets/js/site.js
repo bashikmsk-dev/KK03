@@ -176,6 +176,42 @@
     window.addEventListener('resize', onScroll, { passive: true });
   }
 
+  /* --- Фоновая картинка следует за курсором --------------------------------
+     Логика как в исходном компоненте: чем дальше курсор от центра, тем сильнее
+     картинка уходит в противоположную сторону. Диапазон симметричный (±k/2 %),
+     потому что элемент отцентрован, а не прижат к углу. */
+  function initPointerParallax() {
+    const items = $$('[data-parallax-mouse]');
+    if (!items.length || reduced || coarse) return;
+
+    const target = { x: 0, y: 0 };
+    const current = { x: 0, y: 0 };
+    let raf = 0;
+
+    const loop = () => {
+      current.x += (target.x - current.x) * 0.08;
+      current.y += (target.y - current.y) * 0.08;
+      items.forEach((el) => {
+        const k = parseFloat(el.dataset.parallaxMouse) || 6;
+        el.style.setProperty('--mx', `${(current.x * k).toFixed(2)}%`);
+        el.style.setProperty('--my', `${(current.y * k).toFixed(2)}%`);
+      });
+      const rest = Math.abs(target.x - current.x) < 0.0005 && Math.abs(target.y - current.y) < 0.0005;
+      raf = rest ? 0 : requestAnimationFrame(loop);
+    };
+
+    window.addEventListener(
+      'pointermove',
+      (event) => {
+        if (event.pointerType !== 'mouse') return;
+        target.x = 0.5 - event.clientX / window.innerWidth;
+        target.y = 0.5 - event.clientY / window.innerHeight;
+        if (!raf) raf = requestAnimationFrame(loop);
+      },
+      { passive: true }
+    );
+  }
+
   /* --- Скремблер букв в меню и на подписях --------------------------------- */
   function initScramble() {
     if (reduced || coarse) return;
@@ -343,6 +379,7 @@
     initNominations();
     initMarquee();
     initParallax();
+    initPointerParallax();
     initFloatingPaths();
     initCursor();
     initScramble();

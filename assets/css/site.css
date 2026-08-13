@@ -648,12 +648,14 @@ body.menu-open .burger i:nth-child(2) {
 .about {
   background: var(--ink);
 }
+/* Смещение от курсора живёт в свойстве translate, а transform остаётся
+   за скроллом-параллаксом — так две анимации не спорят за одно свойство. */
 .about__logo {
   position: absolute;
   top: 50%;
   left: 50%;
   width: min(150vh, 110vw);
-  translate: -50% -50%;
+  translate: calc(-50% + var(--mx, 0%)) calc(-50% + var(--my, 0%));
   opacity: 0.32;
   pointer-events: none;
   mix-blend-mode: screen; /* чёрный фон логотипа выпадает, светится только плёнка */
