@@ -1,0 +1,24 @@
+# Нормализация переводов строк: в репозитории всегда LF,
+# в рабочей копии Windows Git подставит привычный CRLF для текстовых файлов.
+* text=auto eol=lf
+
+*.html  text
+*.css   text
+*.js    text
+*.json  text
+*.md    text
+*.yml   text
+*.svg   text
+*.py    text
+
+# Бинарные файлы Git не должен трогать
+*.png   binary
+*.jpg   binary
+*.jpeg  binary
+*.webp  binary
+*.woff  binary
+*.woff2 binary
+*.ttf   binary
+*.otf   binary
+*.pdf   binary
+*.mp4   binary

@@ -1,0 +1,19 @@
+{
+  "name": "cyber-kino",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Сайт международного фестиваля ИИ-короткого метра «Кибер Кино» (RU/EN)",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "start": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "engines": {
+    "node": ">=20.19.0"
+  },
+  "devDependencies": {
+    "vite": "^7.0.0"
+  }
+}
