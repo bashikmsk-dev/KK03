@@ -437,6 +437,188 @@
     });
   }
 
+  /* --- Частицы на фоне ------------------------------------------------------
+     Порт компонента Particles: точки медленно плывут, тянутся к курсору
+     и гаснут у краёв блока. Количество считается от площади, чтобы на
+     широком экране плотность не проваливалась, а на телефоне не росла зря. */
+  function initParticles() {
+    const hosts = $$('[data-particles]');
+    if (!hosts.length) return;
+
+    const DPR_CAP = 2;
+    const STATICITY = 50; // насколько слабо точки реагируют на курсор
+    const EASE = 50; // инерция притяжения
+    const BASE_SIZE = 0.4;
+    const REF_AREA = 1440 * 800; // площадь, для которой задано количество в разметке
+
+    const pointer = { x: 0, y: 0 };
+    window.addEventListener(
+      'pointermove',
+      (event) => {
+        if (event.pointerType !== 'mouse') return;
+        pointer.x = event.clientX;
+        pointer.y = event.clientY;
+      },
+      { passive: true }
+    );
+
+    hosts.forEach((host) => {
+      if (host.dataset.particlesReady === 'done') return;
+      host.dataset.particlesReady = 'done';
+
+      const canvas = document.createElement('canvas');
+      canvas.setAttribute('aria-hidden', 'true');
+      host.appendChild(canvas);
+      const ctx = canvas.getContext('2d');
+      if (!ctx) return;
+
+      const base = parseInt(host.dataset.particles, 10) || 120;
+      let circles = [];
+      let size = { w: 0, h: 0 };
+      let dpr = 1;
+      let rgb = '8, 8, 10';
+      const mouse = { x: 0, y: 0 };
+
+      const spawn = () => ({
+        x: Math.floor(Math.random() * size.w),
+        y: Math.floor(Math.random() * size.h),
+        translateX: 0,
+        translateY: 0,
+        size: Math.floor(Math.random() * 2) + BASE_SIZE,
+        alpha: 0,
+        targetAlpha: parseFloat((Math.random() * 0.6 + 0.1).toFixed(1)),
+        dx: (Math.random() - 0.5) * 0.1,
+        dy: (Math.random() - 0.5) * 0.1,
+        magnetism: 0.1 + Math.random() * 4,
+      });
+
+      const resize = () => {
+        const rect = host.getBoundingClientRect();
+        if (!rect.width || !rect.height) return false;
+        dpr = Math.min(window.devicePixelRatio || 1, DPR_CAP);
+        size = { w: rect.width, h: rect.height };
+        canvas.width = Math.round(size.w * dpr);
+        canvas.height = Math.round(size.h * dpr);
+        canvas.style.width = `${size.w}px`;
+        canvas.style.height = `${size.h}px`;
+
+        const color = getComputedStyle(host).color.match(/\d+/g);
+        if (color && color.length >= 3) rgb = color.slice(0, 3).join(', ');
+
+        const quantity = Math.max(
+          30,
+          Math.round((base * size.w * size.h) / REF_AREA)
+        );
+        circles = Array.from({ length: quantity }, spawn);
+        return true;
+      };
+
+      const draw = () => {
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        ctx.clearRect(0, 0, size.w, size.h);
+        circles.forEach((c) => {
+          ctx.translate(c.translateX, c.translateY);
+          ctx.beginPath();
+          ctx.arc(c.x, c.y, c.size, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(${rgb}, ${c.alpha})`;
+          ctx.fill();
+          ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        });
+      };
+
+      /* Плавное затухание у границ блока: точка гаснет, не доходя до края. */
+      const edgeFade = (c) => {
+        const edges = [
+          c.x + c.translateX - c.size,
+          size.w - c.x - c.translateX - c.size,
+          c.y + c.translateY - c.size,
+          size.h - c.y - c.translateY - c.size,
+        ];
+        const closest = Math.min.apply(null, edges);
+        const k = Math.max(0, closest / 20);
+        if (k > 1) {
+          c.alpha = Math.min(c.targetAlpha, c.alpha + 0.02);
+        } else {
+          c.alpha = c.targetAlpha * k;
+        }
+      };
+
+      const step = () => {
+        const rect = canvas.getBoundingClientRect();
+        const mx = pointer.x - rect.left - size.w / 2;
+        const my = pointer.y - rect.top - size.h / 2;
+        if (Math.abs(mx) < size.w / 2 && Math.abs(my) < size.h / 2) {
+          mouse.x = mx;
+          mouse.y = my;
+        }
+
+        circles.forEach((c, i) => {
+          edgeFade(c);
+          c.x += c.dx;
+          c.y += c.dy;
+          c.translateX += (mouse.x / (STATICITY / c.magnetism) - c.translateX) / EASE;
+          c.translateY += (mouse.y / (STATICITY / c.magnetism) - c.translateY) / EASE;
+
+          const out =
+            c.x < -c.size || c.x > size.w + c.size || c.y < -c.size || c.y > size.h + c.size;
+          if (out) circles[i] = spawn();
+        });
+
+        draw();
+        raf = running ? requestAnimationFrame(step) : 0;
+      };
+
+      let raf = 0;
+      let running = false;
+      const start = () => {
+        if (running || reduced) return;
+        running = true;
+        raf = requestAnimationFrame(step);
+      };
+      const stop = () => {
+        running = false;
+        if (raf) cancelAnimationFrame(raf);
+        raf = 0;
+      };
+
+      if (!resize()) return;
+      circles.forEach((c) => {
+        c.alpha = c.targetAlpha;
+      });
+      draw();
+
+      const refresh = () => {
+        if (!resize()) return;
+        if (reduced) circles.forEach((c) => (c.alpha = c.targetAlpha));
+        draw();
+      };
+      if ('ResizeObserver' in window) {
+        let pending = 0;
+        new ResizeObserver(() => {
+          if (pending) return;
+          pending = requestAnimationFrame(() => {
+            pending = 0;
+            refresh();
+          });
+        }).observe(host);
+      } else {
+        window.addEventListener('resize', refresh, { passive: true });
+      }
+
+      if (reduced) return;
+      if (!('IntersectionObserver' in window)) {
+        start();
+        return;
+      }
+      new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => (entry.isIntersecting ? start() : stop()));
+        },
+        { rootMargin: '200px 0px' }
+      ).observe(host);
+    });
+  }
+
   /* --- Язык: запоминаем выбор пользователя -------------------------------- */
   function initLang() {
     $$('.lang a').forEach((link) => {
@@ -504,6 +686,7 @@
     initParallax();
     initPointerParallax();
     initFloatingPaths();
+    initParticles();
     initCursor();
     initScramble();
     initLang();
