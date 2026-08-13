@@ -375,8 +375,8 @@ body.menu-open .burger i:nth-child(2) {
   position: relative;
   min-height: 100svh;
   display: grid;
-  place-items: center;
-  padding: clamp(6rem, 12vh, 9rem) var(--pad) clamp(3rem, 8vh, 6rem);
+  place-items: end center; /* заголовок внизу, лицо на картинке остаётся открытым */
+  padding: clamp(6rem, 12vh, 9rem) var(--pad) clamp(4.5rem, 11vh, 8rem);
   isolation: isolate;
   background: radial-gradient(120% 90% at 50% 40%, #131318 0%, var(--ink) 62%);
 }
@@ -449,11 +449,12 @@ body.menu-open .burger i:nth-child(2) {
   inset: 0;
   z-index: 2;
   pointer-events: none;
-  background: radial-gradient(
-    62% 48% at 50% 52%,
-    rgba(8, 8, 10, 0.62) 0%,
-    rgba(8, 8, 10, 0.3) 55%,
-    rgba(8, 8, 10, 0) 100%
+  background: linear-gradient(
+    to top,
+    rgba(8, 8, 10, 0.88) 0%,
+    rgba(8, 8, 10, 0.55) 26%,
+    rgba(8, 8, 10, 0.12) 52%,
+    rgba(8, 8, 10, 0) 70%
   );
 }
 
@@ -507,7 +508,7 @@ body.menu-open .burger i:nth-child(2) {
   text-transform: uppercase;
   letter-spacing: -0.055em;
   line-height: 0.82;
-  font-size: clamp(3.4rem, 16.5vw, 17rem);
+  font-size: clamp(3rem, 11.5vw, 12rem);
   margin: 0;
   text-shadow: 0 0 60px rgba(8, 8, 10, 0.55);
   display: flex;
@@ -651,11 +652,11 @@ body.menu-open .burger i:nth-child(2) {
   position: absolute;
   top: 50%;
   left: 50%;
-  width: min(120vh, 96vw);
+  width: min(150vh, 110vw);
   translate: -50% -50%;
-  opacity: 0.09;
+  opacity: 0.32;
   pointer-events: none;
-  filter: grayscale(1);
+  mix-blend-mode: screen; /* чёрный фон логотипа выпадает, светится только плёнка */
   will-change: transform;
 }
 .about__grid {
@@ -819,59 +820,53 @@ body.menu-open .burger i:nth-child(2) {
 /* --- Жюри ----------------------------------------------------------------- */
 .jury__grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: clamp(1rem, 2.4vw, 2.2rem);
+  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+  gap: clamp(1rem, 2.4vw, 2.4rem);
   margin-top: clamp(2rem, 5vw, 4rem);
+  align-items: start;
 }
+
+/* Карточка жюри: имя ложится прямо в белую плашку внутри картинки.
+   --plate-y — центр плашки по вертикали, --plate-w — её ширина.
+   Значения замерены по каждому файлу; при замене картинки поправьте их
+   в атрибуте style у нужной карточки. */
 .juror {
   position: relative;
+  margin: 0;
 }
+/* --img-w выравнивает высоту карточек: квадратные снимки уже landscape-овых */
 .juror__ph {
   position: relative;
   overflow: hidden;
-  aspect-ratio: 4 / 5;
-  background: var(--ink-2);
+  width: var(--img-w, 100%);
+  margin-inline: auto;
+  container-type: inline-size;
 }
 .juror__ph img {
   width: 100%;
-  height: 100%;
-  object-fit: cover;
-  filter: grayscale(1) contrast(1.15);
-  transition: filter 0.6s var(--ease), transform 0.9s var(--ease);
-}
-.juror__ph::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: var(--accent);
-  mix-blend-mode: color;
-  opacity: 0.55;
-  transition: opacity 0.6s var(--ease);
+  height: auto;
+  transition: transform 0.9s var(--ease), filter 0.6s var(--ease);
+  filter: saturate(0.92);
 }
 .juror:hover .juror__ph img {
-  filter: grayscale(0) contrast(1);
-  transform: scale(1.05);
+  transform: scale(1.03);
+  filter: saturate(1.1);
 }
-.juror:hover .juror__ph::after {
-  opacity: 0;
-}
-.juror__name {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  gap: 1rem;
-  margin-top: 0.9rem;
-  font-weight: 700;
+.juror__plate {
+  position: absolute;
+  top: var(--plate-y, 70%);
+  left: 50%;
+  translate: -50% -50%;
+  width: var(--plate-w, 70%);
+  text-align: center;
+  color: var(--ink);
+  font-weight: 900;
   text-transform: uppercase;
-  letter-spacing: -0.02em;
-  font-size: clamp(0.9rem, 1.3vw, 1.15rem);
-}
-.juror__name i {
-  font-family: var(--mono);
-  font-style: normal;
-  font-size: 0.62rem;
-  letter-spacing: 0.2em;
-  opacity: 0.45;
+  line-height: 1.02;
+  letter-spacing: -0.025em;
+  font-size: clamp(0.68rem, 6.2cqw, 1.7rem);
+  text-wrap: balance;
+  pointer-events: none;
 }
 
 /* --- Кнопки --------------------------------------------------------------- */
@@ -1390,6 +1385,12 @@ body.menu-open .burger i:nth-child(2) {
   }
   .hero__meta > *:last-child {
     display: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .hero__title {
+    font-size: clamp(3.2rem, 17vw, 6rem);
   }
 }
 

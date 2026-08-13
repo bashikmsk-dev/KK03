@@ -17,25 +17,40 @@
 | `assets/fonts/` | Шрифт Unbounded (кириллица + латиница), лежит локально |
 | `tools/make_placeholders.py` | Скрипт, которым сгенерированы временные картинки |
 
-## Как заменить картинки на настоящие
+## Картинки
 
-Сейчас в `assets/img/` лежат **временные заглушки**. Положите свои файлы по этим же
-путям с этими же именами — ничего в коде править не нужно:
+Файлы лежат в `assets/img/` под именами без пробелов — пробелы в путях ломают ссылки
+на некоторых хостингах. Чтобы обновить любую картинку, просто положите новую по тому
+же пути, код править не нужно.
 
-| Ваш файл | Куда положить | Рекомендуемый размер |
+| Ваш файл | Путь в проекте | Статус |
 | --- | --- | --- |
-| `Logo.png` | `assets/img/logo.png` | 1400 × 1400, PNG с прозрачным фоном |
-| `Logo Mini white.png` | `assets/img/logo-mini-white.png` | 320 × 320, PNG с прозрачным фоном |
-| `Enshtane 01.png` | `assets/img/enshtane-01.png` | 1920 × 1080 и больше |
-| `Enshtane 02.png` | `assets/img/enshtane-02.png` | тот же размер, что и 01 |
-| `bashilov.png` | `assets/img/jury/bashilov.png` | 800 × 1000 (вертикальные) |
-| `bluket.png` | `assets/img/jury/bluket.png` | 800 × 1000 |
-| `gavrilov.png` | `assets/img/jury/gavrilov.png` | 800 × 1000 |
-| `khaletskiy.png` | `assets/img/jury/khaletskiy.png` | 800 × 1000 |
-| `trifonov.png` | `assets/img/jury/trifonov.png` | 800 × 1000 |
+| `Logo.png` | `assets/img/logo.png` | настоящий |
+| `Enshtane 01.png` | `assets/img/enshtane-01.png` | настоящий |
+| `Enshtane 02.png` | `assets/img/enshtane-02.png` | настоящий |
+| `bashilov.png` | `assets/img/jury/bashilov.png` | настоящий |
+| `bluket.png` | `assets/img/jury/bluket.png` | настоящий |
+| `gavrilov.png` | `assets/img/jury/gavrilov.png` | настоящий |
+| `khaletskiy.png` | `assets/img/jury/khaletskiy.png` | настоящий |
+| `trifonov.png` | `assets/img/jury/trifonov.png` | настоящий |
+| `Logo Mini white.png` | `assets/img/logo-mini-white.png` | **заглушка**, ждём файл (320 × 320, прозрачный фон) |
 
-Имена файлов специально без пробелов: пробелы в путях ломают ссылки на некоторых
-хостингах.
+### Имена жюри внутри картинки
+
+Имя каждого члена жюри выводится текстом прямо в белой плашке на его карточке —
+это не часть изображения, а HTML. Положение плашки задаётся в `index.html`
+и `en/index.html` тремя переменными в атрибуте `style` карточки:
+
+```html
+<div class="juror reveal" style="--img-w: 67%; --plate-y: 70.4%; --plate-w: 75%">
+```
+
+- `--plate-y` — центр белой плашки по вертикали, в % от высоты картинки;
+- `--plate-w` — ширина текстового блока, в % от ширины картинки;
+- `--img-w` — ширина самой картинки в колонке; стоит только у квадратных снимков,
+  чтобы все карточки в ряду были одной высоты.
+
+Если замените фото жюри на другое — поправьте эти три числа у нужной карточки.
 
 ## Эффект на титульном экране
 
@@ -68,12 +83,12 @@ python3 -m http.server 8000
 Либо Source: **Deploy from a branch**, выбрать нужную ветку и папку `/ (root)` —
 файл `.nojekyll` в корне уже лежит.
 
-## Обновление временных картинок
+## Временные картинки
 
 ```bash
 pip install pillow
 python3 tools/make_placeholders.py
 ```
 
-Скрипт перезаписывает заглушки в `assets/img/`. Если настоящие картинки уже на месте —
-запускать его не нужно.
+Скрипт создаёт заглушку только там, где файла ещё нет, — настоящие картинки он не
+трогает. Чтобы перерисовать заглушку, удалите её и запустите скрипт снова.

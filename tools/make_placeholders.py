@@ -188,6 +188,36 @@ def logo(path: Path, size: int, mini: bool):
     print("→", path.relative_to(ROOT))
 
 
+def logo_mini(path: Path, size: int):
+    """Компактный белый знак для шапки — временная замена Logo Mini white.png."""
+    s = size * 4
+    img = Image.new("RGBA", (s, s), (0, 0, 0, 0))
+    d = ImageDraw.Draw(img)
+    white = (255, 255, 255, 255)
+    stroke = max(2, s // 42)
+
+    x0, y0, x1, y1 = s * 0.06, s * 0.22, s * 0.94, s * 0.78
+    d.rounded_rectangle([x0, y0, x1, y1], radius=s * 0.05, outline=white, width=stroke)
+
+    hole = s * 0.052
+    band = (y1 - y0) * 0.20
+    for i in range(5):  # перфорация сверху и снизу
+        cx = x0 + (x1 - x0) * (0.14 + 0.18 * i)
+        for cy in (y0 + band, y1 - band):
+            d.rounded_rectangle(
+                [cx - hole / 2, cy - hole / 2, cx + hole / 2, cy + hole / 2],
+                radius=hole * 0.25,
+                fill=white,
+            )
+
+    r = s * 0.115  # объектив по центру
+    cx, cy = s / 2, (y0 + y1) / 2
+    d.ellipse([cx - r, cy - r, cx + r, cy + r], fill=white)
+
+    img.resize((size, size), Image.LANCZOS).save(path)
+    print("→", path.relative_to(ROOT))
+
+
 def jury_card(path: Path, initials: str, seed: int):
     """Duotone-заглушка портрета жюри 800×1000."""
     w, h = 800, 1000
@@ -225,13 +255,19 @@ def jury_card(path: Path, initials: str, seed: int):
 
 
 def main():
+    """Генерирует только те заглушки, которых ещё нет: настоящие файлы не трогаем.
+    Чтобы перерисовать заглушку, удалите её и запустите скрипт снова."""
     IMG.mkdir(parents=True, exist_ok=True)
     JURY.mkdir(parents=True, exist_ok=True)
 
-    enshtane(IMG / "enshtane-01.png", seed=11, accent=BLUE, bright=205, label="ENSHTANE 01 / PLACEHOLDER")
-    enshtane(IMG / "enshtane-02.png", seed=29, accent=ACCENT, bright=150, label="ENSHTANE 02 / PLACEHOLDER")
-    logo(IMG / "logo.png", 1400, mini=False)
-    logo(IMG / "logo-mini-white.png", 320, mini=True)
+    if not (IMG / "enshtane-01.png").exists():
+        enshtane(IMG / "enshtane-01.png", seed=11, accent=BLUE, bright=205, label="ENSHTANE 01 / PLACEHOLDER")
+    if not (IMG / "enshtane-02.png").exists():
+        enshtane(IMG / "enshtane-02.png", seed=29, accent=ACCENT, bright=150, label="ENSHTANE 02 / PLACEHOLDER")
+    if not (IMG / "logo.png").exists():
+        logo(IMG / "logo.png", 1400, mini=False)
+    if not (IMG / "logo-mini-white.png").exists():
+        logo_mini(IMG / "logo-mini-white.png", 320)
 
     for name, initials, seed in (
         ("bashilov", "АБ", 101),
@@ -240,7 +276,8 @@ def main():
         ("khaletskiy", "КХ", 404),
         ("trifonov", "АТ", 505),
     ):
-        jury_card(JURY / f"{name}.png", initials, seed)
+        if not (JURY / f"{name}.png").exists():
+            jury_card(JURY / f"{name}.png", initials, seed)
 
 
 if __name__ == "__main__":
