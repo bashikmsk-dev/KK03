@@ -213,6 +213,10 @@ body::after {
   clip-path: polygon(0 var(--slant), 100% 0, 100% 100%, 0 100%);
   margin-top: calc(var(--slant) * -1);
 }
+/* Обратный наклон — чтобы угол по странице чередовался */
+.slant--rev {
+  clip-path: polygon(0 0, 100% var(--slant), 100% 100%, 0 100%);
+}
 /* Поля увеличены на высоту среза с обеих сторон: сверху клин съедает часть
    собственного блока, снизу — следующий блок наезжает на этот. */
 .section.slant {
@@ -222,6 +226,19 @@ body::after {
 .marquee.slant {
   padding-block: calc(clamp(0.6rem, 1.4vw, 1.1rem) + var(--slant));
   border-top: 0; /* границу задаёт сам срез, полоска вдоль него не нужна */
+}
+/* Строка едет параллельно срезу: угол считается из высоты наклона и ширины
+   окна, поэтому совпадает с кромкой на любом экране. Знак зависит от
+   направления среза. Браузеры без тригонометрии в CSS просто оставят строку
+   горизонтальной — правило отбросится целиком. */
+.marquee.slant .marquee__track {
+  /* Вращаем вокруг левого края полосы, а не центра дорожки: дорожка шире окна,
+     и поворот вокруг её середины задирал бы видимую часть строки. */
+  transform-origin: 0 50%;
+  rotate: calc(-1 * atan2(var(--slant), 100vw));
+}
+.marquee.slant.slant--rev .marquee__track {
+  rotate: atan2(var(--slant), 100vw);
 }
 .footer.slant {
   padding-top: calc(clamp(4rem, 9vw, 8rem) + var(--slant));
@@ -917,16 +934,20 @@ body.menu-open .burger i:nth-child(2) {
   transform: scale(1.05);
   filter: saturate(1.12);
 }
+/* Имя сверху, фамилия под ним — одинаковым кеглем у всех, поэтому подписи
+   выстраиваются в общую сетку независимо от длины слов. */
 .juror__name {
   display: block;
-  margin-top: 0.4rem;
+  margin-top: 0.6rem;
   color: var(--ink);
   font-weight: 900;
   text-transform: uppercase;
-  line-height: 1.05;
+  line-height: 1.12;
   letter-spacing: -0.02em;
-  font-size: clamp(0.85rem, 1.35vw, 1.25rem);
-  text-wrap: balance;
+  font-size: clamp(0.85rem, 1.25vw, 1.15rem);
+}
+.juror__name span {
+  display: block;
 }
 .juror__name i {
   display: block;
@@ -1028,7 +1049,7 @@ body.menu-open .burger i:nth-child(2) {
   color: var(--ink);
   overflow: hidden;
   contain: paint;
-  opacity: 0.34; /* фон остаётся фоном: текст поверх читается свободно */
+  opacity: 0.17; /* фон остаётся фоном: текст поверх читается свободно */
 }
 /* Кривые рисует canvas: он обновляется собственным слоем и не заставляет
    браузер переоформлять текст секции — из-за этого раньше картинка «троила». */
@@ -1055,8 +1076,7 @@ body.menu-open .burger i:nth-child(2) {
 /* Ореол цветом фона: на кремовом он невидим, но стирает линии вплотную
    к буквам — иначе кривая проходит сквозь мелкий шрифт и ломает его форму. */
 .where .eyebrow,
-.where__item h3,
-.where__note {
+.where__item h3 {
   text-shadow: 0 0 4px var(--paper), 0 0 9px var(--paper), 0 0 14px var(--paper);
 }
 
@@ -1083,14 +1103,20 @@ body.menu-open .burger i:nth-child(2) {
   font-size: min(2.6rem, 7.3cqw);
   overflow-wrap: break-word;
 }
+/* Важная строка: подложка полностью снимает вопрос читаемости поверх линий */
 .where__note {
+  display: inline-block;
   margin-top: clamp(2rem, 4vw, 3rem);
+  padding: 0.7em 1.1em;
+  background: var(--accent);
+  color: #fff;
   font-family: var(--mono);
-  font-size: clamp(0.8rem, 1vw, 0.95rem);
-  font-weight: 600;
-  letter-spacing: 0.12em;
+  font-size: clamp(0.85rem, 1.25vw, 1.15rem);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  line-height: 1.35;
   text-transform: uppercase;
-  color: #d92a06; /* акцент притемнён: чистый #FF3A12 на кремовом читается слабо */
+  text-wrap: balance;
 }
 
 /* --- Соцсети и подвал ----------------------------------------------------- */
