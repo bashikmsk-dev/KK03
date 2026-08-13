@@ -58,6 +58,7 @@
 
   --pad: clamp(1.25rem, 4vw, 5rem);
   --maxw: 1680px;
+  --slant: clamp(26px, 3.4vw, 76px); /* высота наклона границ между секциями */
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
@@ -158,14 +159,17 @@ body::after {
   margin: 0;
 }
 
+/* Нижней границы у кегля нет намеренно: в Unbounded 900 длинное слово вроде
+   «НАПРАВЛЕНИЙ» шире экрана телефона, и фиксированный минимум выталкивал его
+   за край. Коэффициенты подобраны по самому длинному слову в обоих языках. */
 .h-xxl {
-  font-size: clamp(3.2rem, 13.5vw, 15rem);
+  font-size: min(15rem, 12.6vw);
 }
 .h-xl {
-  font-size: clamp(2.4rem, 7.5vw, 7.5rem);
+  font-size: min(7.5rem, 7.4vw);
 }
 .h-l {
-  font-size: clamp(1.9rem, 4.4vw, 4rem);
+  font-size: min(4rem, 4.4vw);
 }
 
 .eyebrow {
@@ -199,6 +203,32 @@ body::after {
   position: relative;
   padding: clamp(5rem, 11vw, 11rem) var(--pad);
   overflow: hidden;
+}
+
+/* --- Наклонные границы секций ---------------------------------------------
+   Блок срезан по диагонали сверху и поднят на ту же величину, поэтому в
+   вырезанном клине проступает предыдущая секция. Приём работает при любом
+   сочетании цветов: сосед лежит ниже по порядку отрисовки. */
+.slant {
+  clip-path: polygon(0 var(--slant), 100% 0, 100% 100%, 0 100%);
+  margin-top: calc(var(--slant) * -1);
+}
+/* Поля увеличены на высоту среза с обеих сторон: сверху клин съедает часть
+   собственного блока, снизу — следующий блок наезжает на этот. */
+.section.slant {
+  padding-top: calc(clamp(5rem, 11vw, 11rem) + var(--slant));
+  padding-bottom: calc(clamp(5rem, 11vw, 11rem) + var(--slant));
+}
+.marquee.slant {
+  padding-block: calc(clamp(0.6rem, 1.4vw, 1.1rem) + var(--slant));
+  border-top: 0; /* границу задаёт сам срез, полоска вдоль него не нужна */
+}
+.footer.slant {
+  padding-top: calc(clamp(4rem, 9vw, 8rem) + var(--slant));
+}
+/* Подпись у нижнего края первого экрана поднимается над срезом */
+.hero__meta {
+  bottom: calc(clamp(1.2rem, 3vh, 2.4rem) + var(--slant));
 }
 
 /* Якоря не должны уезжать под фиксированную шапку */
@@ -671,6 +701,22 @@ body.menu-open .burger i:nth-child(2) {
 }
 .about__text p + p {
   margin-top: 1.6rem;
+}
+/* На широком экране текст показан целиком, кнопка не нужна */
+.about__more > div {
+  overflow: hidden;
+}
+.about__toggle {
+  display: none;
+}
+
+/* Заголовок стоит в узкой колонке, поэтому кегль ограничен ещё и её шириной:
+   английское «cinema» при общем размере вылезало за край. */
+.about__grid > *:first-child {
+  container-type: inline-size;
+}
+.about__grid h2 {
+  font-size: min(7.5rem, 7.4vw, 19cqw);
 }
 
 /* --- Номинации ------------------------------------------------------------ */
@@ -1192,7 +1238,8 @@ body.menu-open .burger i:nth-child(2) {
 }
 .deadlines {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  /* 230px не хватало: «Продолжительность» и «01.01.2025» вылезали за карточку */
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 1px;
   margin-top: clamp(2.4rem, 6vw, 4.5rem);
   background: var(--line);
@@ -1414,6 +1461,38 @@ body.menu-open .burger i:nth-child(2) {
 }
 
 @media (max-width: 860px) {
+  /* Раздел «О фестивале» на телефоне слишком длинный: второй абзац
+     сворачиваем под кнопку, раскрывается по нажатию. */
+  .about__more {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.5s var(--ease);
+    position: relative;
+  }
+  .about__text.is-open .about__more {
+    grid-template-rows: 1fr;
+  }
+  .about__toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-top: 1.4rem;
+    padding: 0.7rem 1.4rem 0.7rem 0;
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+  .about__toggle svg {
+    width: 1.1em;
+    height: 1.1em;
+    transition: transform 0.4s var(--ease);
+  }
+  .about__text.is-open .about__toggle svg {
+    transform: rotate(180deg);
+  }
+
   .burger {
     display: block;
   }

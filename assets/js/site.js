@@ -619,6 +619,25 @@
     });
   }
 
+  /* --- «Читать далее» в разделе о фестивале -------------------------------
+     Кнопка видна только на узких экранах — на широких текст показан целиком,
+     поэтому состояние сбрасывается при возврате к десктопной раскладке. */
+  function initAboutToggle() {
+    const toggle = $('.about__toggle');
+    const text = toggle && toggle.closest('.about__text');
+    if (!toggle || !text) return;
+
+    const label = $('span', toggle);
+    const opened = label ? label.textContent.trim() : '';
+    const closed = opened === 'Read more' ? 'Show less' : 'Свернуть';
+
+    toggle.addEventListener('click', () => {
+      const open = text.classList.toggle('is-open');
+      toggle.setAttribute('aria-expanded', String(open));
+      if (label) label.textContent = open ? closed : opened;
+    });
+  }
+
   /* --- Язык: запоминаем выбор пользователя -------------------------------- */
   function initLang() {
     $$('.lang a').forEach((link) => {
@@ -687,6 +706,7 @@
     initPointerParallax();
     initFloatingPaths();
     initParticles();
+    initAboutToggle();
     initCursor();
     initScramble();
     initLang();

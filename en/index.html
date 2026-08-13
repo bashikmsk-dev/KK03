@@ -16,8 +16,9 @@
     <meta property="og:type" content="website" />
     <meta property="og:title" content="Cyber Kino — AI Short Film Festival" />
     <meta property="og:description" content="We. Future. Cinema. Moscow, October–November 2026." />
-    <meta property="og:image" content="../assets/img/enshtane-01.png" />
+    <meta property="og:image" content="../assets/img/og-cover.jpg" />
     <meta name="theme-color" content="#08080a" />
+    <link rel="preload" as="image" fetchpriority="high" imagesrcset="../assets/img/enshtane-01-640.webp 640w, ../assets/img/enshtane-01-960.webp 960w, ../assets/img/enshtane-01-1440.webp 1440w" imagesizes="100vw" href="../assets/img/enshtane-01-960.webp" />
     <link rel="preload" as="font" type="font/woff2" href="../assets/fonts/unbounded-latin.woff2" crossorigin />
     <link rel="stylesheet" href="../assets/css/site.css" />
   </head>
@@ -26,7 +27,7 @@
 
     <header class="header">
       <a class="brand" href="./index.html" aria-label="Cyber Kino — home">
-        <img src="../assets/img/logo-mini-white.png" alt="Cyber Kino festival logo" width="400" height="240" />
+        <img src="../assets/img/logo-mini-white-280.webp" srcset="../assets/img/logo-mini-white-140.webp 140w, ../assets/img/logo-mini-white-280.webp 280w" sizes="68px" width="280" height="168" decoding="async" alt="Cyber Kino festival logo" />
         <span>Cyber Kino<br />2026</span>
       </a>
 
@@ -53,8 +54,8 @@
       <!-- HERO ------------------------------------------------------------- -->
       <section class="hero" id="top">
         <div class="hero__stage" data-reveal-mode="outside">
-          <img class="hero__img hero__img--base" src="../assets/img/enshtane-01.png" alt="A portrait assembled from digital artefacts — the visual symbol of the festival" />
-          <img class="hero__img hero__img--reveal" src="../assets/img/enshtane-02.png" alt="" aria-hidden="true" />
+          <img class="hero__img hero__img--base" src="../assets/img/enshtane-01-1440.webp" srcset="../assets/img/enshtane-01-640.webp 640w, ../assets/img/enshtane-01-960.webp 960w, ../assets/img/enshtane-01-1440.webp 1440w" sizes="100vw" width="1440" height="761" fetchpriority="high" decoding="async" alt="A portrait assembled from digital artefacts — the visual symbol of the festival" />
+          <img class="hero__img hero__img--reveal" src="../assets/img/enshtane-02-1440.webp" srcset="../assets/img/enshtane-02-640.webp 640w, ../assets/img/enshtane-02-960.webp 960w, ../assets/img/enshtane-02-1440.webp 1440w" sizes="100vw" width="1440" height="761" fetchpriority="low" decoding="async" alt="" aria-hidden="true" />
           <div class="hero__ring" aria-hidden="true"></div>
         </div>
 
@@ -69,7 +70,7 @@
         </div>
       </section>
 
-      <div class="marquee" aria-hidden="true">
+      <div class="marquee slant" aria-hidden="true">
         <div class="marquee__track">
           <span>We. Future. Cinema.</span>
           <span>AI Short Film Festival</span>
@@ -78,8 +79,8 @@
       </div>
 
       <!-- ABOUT ------------------------------------------------------------ -->
-      <section class="section about grid-lines" id="about">
-        <img class="about__logo" src="../assets/img/logo.png" alt="" aria-hidden="true" data-parallax="0.08" data-parallax-mouse="6" />
+      <section class="section about grid-lines slant" id="about">
+        <img class="about__logo" src="../assets/img/logo-1200.webp" srcset="../assets/img/logo-480.webp 480w, ../assets/img/logo-720.webp 720w, ../assets/img/logo-1200.webp 1200w" sizes="(max-width: 860px) 92vw, 120vh" width="1200" height="660" loading="lazy" decoding="async" alt="" aria-hidden="true" data-parallax="0.08" data-parallax-mouse="6" />
         <div class="wrap about__grid">
           <div class="reveal">
             <p class="eyebrow">About the festival</p>
@@ -92,20 +93,28 @@
               takes shape, where new visual languages are born and formats appear that seemed
               impossible only a few years ago.
             </p>
-            <p class="lead">
+            <div class="about__more" id="about-more">
+            <div><p class="lead">
               The core idea of the festival is to give talented people without large studios,
               multi-million budgets and huge teams a chance to enter the film industry through the new
               technologies that artificial intelligence provides. Today a single person with a strong
               idea can create projects that once required the resources of an entire film studio. Cyber
               Kino becomes the entry point for a new generation of directors, artists and digital
               creators.
-            </p>
+            </p></div>
+          </div>
+          <button class="about__toggle" type="button" aria-expanded="false" aria-controls="about-more">
+            <span>Read more</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path d="M6 9l6 6 6-6" />
+            </svg>
+          </button>
           </div>
         </div>
       </section>
 
       <!-- AWARDS ----------------------------------------------------------- -->
-      <section class="section section--paper noms" id="nominations">
+      <section class="section section--paper noms slant" id="nominations">
         <div class="wrap">
           <div class="reveal">
             <p class="eyebrow">Award categories</p>
@@ -178,7 +187,7 @@
       </section>
 
       <!-- BUSINESS PROGRAMME ----------------------------------------------- -->
-      <section class="section grid-lines" id="business">
+      <section class="section grid-lines slant" id="business">
         <div class="wrap">
           <div class="reveal">
             <p class="eyebrow">Business programme</p>
@@ -215,7 +224,7 @@
         </div>
       </section>
 
-      <div class="marquee marquee--accent" aria-hidden="true">
+      <div class="marquee marquee--accent slant" aria-hidden="true">
         <div class="marquee__track">
           <span>Festival jury</span>
           <span>Cyber Kino Jury</span>
@@ -223,7 +232,7 @@
       </div>
 
       <!-- JURY -------------------------------------------------------------- -->
-      <section class="section section--paper jury" id="jury">
+      <section class="section section--paper jury slant" id="jury">
         <div class="particles" data-particles="140" aria-hidden="true"></div>
         <div class="wrap">
           <div class="reveal">
@@ -252,7 +261,7 @@
       </section>
 
       <!-- SUBMIT ------------------------------------------------------------ -->
-      <section class="section cta grid-lines" id="apply">
+      <section class="section cta grid-lines slant" id="apply">
         <div class="wrap cta__inner reveal">
           <p class="eyebrow" style="justify-content: center">Call for entries</p>
           <h2 class="display h-xl">Your film<br />belongs here</h2>
@@ -270,7 +279,7 @@
       </section>
 
       <!-- WHERE & WHEN ------------------------------------------------------ -->
-      <section class="section section--paper where" id="where">
+      <section class="section section--paper where slant" id="where">
         <div class="paths" data-paths aria-hidden="true"></div>
         <div class="wrap">
           <div class="reveal">
@@ -298,7 +307,7 @@
       </section>
 
       <!-- FOLLOW ------------------------------------------------------------ -->
-      <section class="section grid-lines" id="follow">
+      <section class="section grid-lines slant" id="follow">
         <div class="wrap">
           <div class="reveal">
             <p class="eyebrow">Follow us</p>
@@ -331,7 +340,7 @@
       </section>
     </main>
 
-    <footer class="footer">
+    <footer class="footer slant">
       <blockquote class="signature reveal">
         “We show the future of cinema, made without classic studios”
         <b>— Cyber Kino Festival</b>
