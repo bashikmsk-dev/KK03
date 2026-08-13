@@ -981,7 +981,7 @@ body.menu-open .burger i:nth-child(2) {
   color: var(--ink);
   overflow: hidden;
   contain: paint;
-  opacity: 0.5; /* фон остаётся фоном: текст поверх читается свободно */
+  opacity: 0.34; /* фон остаётся фоном: текст поверх читается свободно */
 }
 /* Кривые рисует canvas: он обновляется собственным слоем и не заставляет
    браузер переоформлять текст секции — из-за этого раньше картинка «троила». */
@@ -1005,13 +1005,23 @@ body.menu-open .burger i:nth-child(2) {
 .where__item {
   container-type: inline-size;
 }
+/* Ореол цветом фона: на кремовом он невидим, но стирает линии вплотную
+   к буквам — иначе кривая проходит сквозь мелкий шрифт и ломает его форму. */
+.where .eyebrow,
+.where__item h3,
+.where__note {
+  text-shadow: 0 0 4px var(--paper), 0 0 9px var(--paper), 0 0 14px var(--paper);
+}
+
+/* Подписи набраны мелким моношрифтом и лежат прямо на линиях фона,
+   поэтому им нужен более плотный цвет и кегль крупнее серого стандарта. */
 .where__item h3 {
   font-family: var(--mono);
-  font-size: 0.66rem;
-  font-weight: 400;
-  letter-spacing: 0.28em;
+  font-size: clamp(0.7rem, 0.85vw, 0.8rem);
+  font-weight: 500;
+  letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: var(--muted);
+  color: rgba(8, 8, 10, 0.68);
   margin: 0 0 1rem;
 }
 .where__item p {
@@ -1029,10 +1039,11 @@ body.menu-open .burger i:nth-child(2) {
 .where__note {
   margin-top: clamp(2rem, 4vw, 3rem);
   font-family: var(--mono);
-  font-size: 0.72rem;
-  letter-spacing: 0.18em;
+  font-size: clamp(0.8rem, 1vw, 0.95rem);
+  font-weight: 600;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--accent);
+  color: #d92a06; /* акцент притемнён: чистый #FF3A12 на кремовом читается слабо */
 }
 
 /* --- Соцсети и подвал ----------------------------------------------------- */
