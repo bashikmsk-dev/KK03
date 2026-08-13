@@ -889,53 +889,54 @@ body.menu-open .burger i:nth-child(2) {
 }
 .jury__grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
-  gap: clamp(1rem, 2.4vw, 2.4rem);
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: clamp(1rem, 2.2vw, 2.2rem);
   margin-top: clamp(2rem, 5vw, 4rem);
   align-items: start;
 }
 
-/* Карточка жюри: имя ложится прямо в белую плашку внутри картинки.
-   --plate-y — центр плашки по вертикали, --plate-w — её ширина.
-   Значения замерены по каждому файлу; при замене картинки поправьте их
-   в атрибуте style у нужной карточки. */
+/* Карточка жюри: портрет — вырезка с прозрачным фоном, подпись идёт под ним.
+   Все снимки одного размера, поэтому индивидуальная подгонка не нужна. */
 .juror {
   position: relative;
   margin: 0;
+  text-align: center;
 }
-/* --img-w выравнивает высоту карточек: квадратные снимки уже landscape-овых */
 .juror__ph {
   position: relative;
-  overflow: hidden;
-  width: var(--img-w, 100%);
-  margin-inline: auto;
-  container-type: inline-size;
+  aspect-ratio: 1;
 }
 .juror__ph img {
   width: 100%;
-  height: auto;
-  transition: transform 0.9s var(--ease), filter 0.6s var(--ease);
-  filter: saturate(0.92);
+  height: 100%;
+  object-fit: contain;
+  transition: transform 0.8s var(--ease), filter 0.6s var(--ease);
+  filter: saturate(0.95);
 }
 .juror:hover .juror__ph img {
-  transform: scale(1.03);
-  filter: saturate(1.1);
+  transform: scale(1.05);
+  filter: saturate(1.12);
 }
-.juror__plate {
-  position: absolute;
-  top: var(--plate-y, 70%);
-  left: 50%;
-  translate: -50% -50%;
-  width: var(--plate-w, 70%);
-  text-align: center;
+.juror__name {
+  display: block;
+  margin-top: 0.4rem;
   color: var(--ink);
   font-weight: 900;
   text-transform: uppercase;
-  line-height: 1.02;
-  letter-spacing: -0.025em;
-  font-size: clamp(0.68rem, 6.2cqw, 1.7rem);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  font-size: clamp(0.85rem, 1.35vw, 1.25rem);
   text-wrap: balance;
-  pointer-events: none;
+}
+.juror__name i {
+  display: block;
+  margin-top: 0.5rem;
+  font-family: var(--mono);
+  font-style: normal;
+  font-weight: 400;
+  font-size: 0.62rem;
+  letter-spacing: 0.24em;
+  color: rgba(8, 8, 10, 0.45);
 }
 
 /* --- Кнопки --------------------------------------------------------------- */
@@ -1531,6 +1532,13 @@ body.menu-open .burger i:nth-child(2) {
   }
   .hero__meta > *:last-child {
     display: none;
+  }
+}
+
+@media (max-width: 700px) {
+  /* По одному портрету в ряд секция «Жюри» растягивалась на пять экранов */
+  .jury__grid {
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 

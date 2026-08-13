@@ -25,7 +25,7 @@ TARGETS = {
     "logo.png": (480, 720, 1200),
     "logo-mini-white.png": (140, 280),
 }
-JURY_WIDTHS = (400, 800)
+JURY_WIDTHS = (250, 500)  # исходники — квадраты 500×500
 QUALITY = 78
 
 
