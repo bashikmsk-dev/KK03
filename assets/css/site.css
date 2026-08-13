@@ -709,6 +709,9 @@ body.menu-open .burger i:nth-child(2) {
   top: 50%;
   left: 50%;
   width: min(150vh, 110vw);
+  /* Без этого высота берётся из атрибута height и картинку растягивает:
+     атрибуты width/height оставлены ради расчёта пропорции до загрузки. */
+  height: auto;
   translate: calc(-50% + var(--mx, 0%)) calc(-50% + var(--my, 0%));
   opacity: 0.32;
   pointer-events: none;
