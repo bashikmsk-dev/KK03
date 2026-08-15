@@ -826,10 +826,13 @@ body.menu-open .burger i:nth-child(2) {
   opacity: 0.75;
 }
 
-/* --- Деловая часть -------------------------------------------------------- */
+/* --- Деловая часть --------------------------------------------------------
+   Ячеек пять — число простое, поэтому при произвольном числе колонок в
+   последнем ряду оставалась дыра, залитая цветом сетки. Колонки задаём явно,
+   а предпоследнюю или последнюю ячейку растягиваем ровно на остаток ряда. */
 .biz__grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: 1px;
   margin-top: clamp(2rem, 5vw, 4rem);
   background: var(--line);
@@ -843,39 +846,50 @@ body.menu-open .burger i:nth-child(2) {
   flex-direction: column;
   justify-content: space-between;
   gap: 1.5rem;
+  container-type: inline-size;
   transition: background 0.5s var(--ease), color 0.5s var(--ease);
 }
 .biz__cell:hover {
   background: var(--accent);
   color: #fff;
 }
-/* Последняя ячейка растягивается на всю ширину — акцент на ИИ-Лаборатории */
-.biz__cell--wide {
-  grid-column: 1 / -1;
-  min-height: 0;
-}
-@media (min-width: 900px) {
-  .biz__cell--wide {
-    flex-direction: row;
-    align-items: flex-end;
-    justify-content: space-between;
-    gap: clamp(2rem, 6vw, 6rem);
+
+@media (max-width: 1499px) {
+  /* 3 + 2: четвёртая ячейка занимает две колонки */
+  .biz__grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
-  .biz__cell--wide b {
-    font-size: clamp(1.4rem, 2.6vw, 2.4rem);
-    flex: 0 0 auto;
-  }
-  .biz__cell--wide p {
-    max-width: 44ch;
-  }
-  .biz__cell--wide span {
-    align-self: flex-start;
+  .biz__cell:nth-child(4) {
+    grid-column: span 2;
   }
 }
+@media (max-width: 999px) {
+  /* 2 + 2 + 1: последняя ячейка занимает обе колонки */
+  .biz__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .biz__cell:nth-child(4) {
+    grid-column: auto;
+  }
+  .biz__cell:last-child {
+    grid-column: span 2;
+  }
+}
+@media (max-width: 619px) {
+  .biz__grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .biz__cell:last-child {
+    grid-column: auto;
+  }
+}
+
 .biz__cell b {
   font-weight: 900;
   text-transform: uppercase;
-  font-size: clamp(1rem, 1.5vw, 1.4rem);
+  /* Кегель считается от ширины самой ячейки: 8.5cqw — предел, при котором
+     «ИИ-Лаборатория» помещается в строку при любом числе колонок. */
+  font-size: min(1.4rem, 8.5cqw);
   letter-spacing: -0.03em;
   line-height: 1.05;
   overflow-wrap: break-word;
