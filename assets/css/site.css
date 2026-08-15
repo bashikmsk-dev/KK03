@@ -246,8 +246,13 @@ body::after {
   rotate: atan2(var(--slant), 100vw);
   translate: 0 calc(var(--slant) / -2);
 }
+/* Соцсети и подпись — один смысловой блок в конце страницы; полный отбой
+   секции между ними давал больше 350 px пустоты на широком экране. */
 .footer.slant {
-  padding-top: calc(clamp(4rem, 9vw, 8rem) + var(--slant));
+  padding-top: calc(2rem + var(--slant));
+}
+#follow.section.slant {
+  padding-bottom: calc(2rem + var(--slant));
 }
 /* Подпись у нижнего края первого экрана поднимается над срезом */
 .hero__meta {
@@ -1203,7 +1208,7 @@ body.menu-open .burger i:nth-child(2) {
 }
 .footer__bottom {
   max-width: var(--maxw);
-  margin: clamp(3rem, 7vw, 6rem) auto 0;
+  margin: clamp(2.25rem, 4.5vw, 4rem) auto 0;
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
