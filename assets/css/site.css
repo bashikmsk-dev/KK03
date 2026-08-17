@@ -1579,13 +1579,10 @@ body.menu-open .burger i:nth-child(2) {
     align-items: center;
     gap: 0.8rem;
   }
+  /* В блоке остался один элемент — прежнее правило, прятавшее последний
+     из двух, теперь скрыло бы саму подсказку о прокрутке. */
   .hero__meta {
-    flex-direction: column;
-    gap: 0.5rem;
     align-items: flex-start;
-  }
-  .hero__meta > *:last-child {
-    display: none;
   }
 }
 
