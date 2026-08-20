@@ -638,6 +638,45 @@
     });
   }
 
+  /* --- Согласие на cookie и обработку персональных данных ------------------ */
+  function initConsent() {
+    const box = $('.consent');
+    if (!box) return;
+
+    const KEY = 'ck-consent';
+    let saved = null;
+    try {
+      saved = localStorage.getItem(KEY);
+    } catch (e) {
+      /* приватный режим: покажем плашку, но запомнить согласие не сможем */
+    }
+    if (saved === 'accepted') return;
+
+    box.hidden = false;
+    // отдельный кадр, иначе браузер не увидит смены transform и не анимирует
+    requestAnimationFrame(() => box.classList.add('is-visible'));
+
+    const accept = $('[data-consent-accept]', box);
+    if (!accept) return;
+
+    accept.addEventListener('click', () => {
+      try {
+        localStorage.setItem(KEY, 'accepted');
+      } catch (e) {
+        /* не удалось сохранить — плашка просто вернётся при следующем заходе */
+      }
+      box.classList.remove('is-visible');
+      let done = false;
+      const hide = () => {
+        if (done) return;
+        done = true;
+        box.hidden = true;
+      };
+      box.addEventListener('transitionend', hide, { once: true });
+      setTimeout(hide, 700); // подстраховка, если перехода не было
+    });
+  }
+
   /* --- Язык: запоминаем выбор пользователя -------------------------------- */
   function initLang() {
     $$('.lang a').forEach((link) => {
@@ -710,6 +749,7 @@
     initCursor();
     initScramble();
     initLang();
+    initConsent();
     initRulesPage();
     initYear();
     if (window.CyberKino && window.CyberKino.initHero) {
