@@ -638,6 +638,40 @@
     });
   }
 
+  /* --- Карточки жюри -------------------------------------------------------
+     На мыши регалии показывает :hover, с клавиатуры — :focus-within. Пальцем
+     наведения нет, поэтому на тач-экранах карточку открывает касание: тап по
+     портрету показывает её, повторный тап или касание мимо — прячет. */
+  function initJury() {
+    const jurors = $$('.juror');
+    if (!jurors.length) return;
+
+    const close = (except) => {
+      jurors.forEach((j) => {
+        if (j !== except) j.classList.remove('is-open');
+      });
+    };
+
+    jurors.forEach((juror) => {
+      juror.addEventListener('click', () => {
+        if (!coarse) return;
+        const open = !juror.classList.contains('is-open');
+        close(juror);
+        juror.classList.toggle('is-open', open);
+      });
+      // тап по карточке считаем тапом по портрету — она лежит поверх фото
+      juror.addEventListener('keydown', (e) => {
+        if (e.key !== 'Escape') return;
+        juror.classList.remove('is-open');
+        juror.blur();
+      });
+    });
+
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('.juror')) close(null);
+    });
+  }
+
   /* --- Согласие на cookie и обработку персональных данных ------------------ */
   function initConsent() {
     const box = $('.consent');
@@ -746,6 +780,7 @@
     initFloatingPaths();
     initParticles();
     initAboutToggle();
+    initJury();
     initCursor();
     initScramble();
     initLang();

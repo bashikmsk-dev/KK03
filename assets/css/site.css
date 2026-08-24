@@ -987,6 +987,65 @@ body.menu-open .burger i:nth-child(2) {
   letter-spacing: 0.24em;
   color: rgba(8, 8, 10, 0.45);
 }
+.juror:focus {
+  outline: none;
+}
+.juror:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 6px;
+}
+
+/* Карточка с регалиями: та же подложка «liquid glass», что и у плашки cookie.
+   Всплывает над нижней частью портрета — сквозь стекло видно размытое фото.
+   Скрытая карточка остаётся в DOM и в дереве доступности (прячем прозрачностью,
+   а не visibility), поэтому скринридер читает описание вместе с именем. */
+.juror__card {
+  --tx: -50%;
+  --glass-tint: 0.66;
+  position: absolute;
+  left: 50%;
+  bottom: 0.4rem;
+  z-index: 5;
+  /* колонка сетки бывает уже 15rem — тогда карточка чуть выступает по бокам */
+  width: max(100%, 15rem);
+  padding: 0.9rem 1rem 1rem;
+  border-radius: 18px;
+  text-align: left;
+  opacity: 0;
+  translate: var(--tx) 10px;
+  pointer-events: none;
+  transition: opacity 0.35s var(--ease), translate 0.45s var(--ease);
+}
+@media (hover: hover) and (pointer: fine) {
+  .juror:hover .juror__card {
+    opacity: 1;
+    translate: var(--tx) 0;
+  }
+}
+/* focus-visible, а не focus-within: касание пальцем тоже ставит фокус на
+   портрет, и карточка переставала закрываться повторным тапом. */
+.juror:focus-visible .juror__card,
+.juror.is-open .juror__card {
+  opacity: 1;
+  translate: var(--tx) 0;
+}
+.juror__card-name {
+  display: block;
+  font-size: 0.86rem;
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: 0;
+  text-transform: none;
+}
+.juror__card-bio {
+  margin: 0.45rem 0 0;
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  line-height: 1.5;
+  letter-spacing: 0.01em;
+  color: rgba(255, 255, 255, 0.8);
+  text-wrap: pretty;
+}
 
 /* --- Кнопки --------------------------------------------------------------- */
 .btn {
@@ -1591,6 +1650,18 @@ body.menu-open .burger i:nth-child(2) {
   .jury__grid {
     grid-template-columns: repeat(2, 1fr);
   }
+  /* В две колонки карточка шире своей ячейки, поэтому её не центрируем, а
+     прижимаем к внешнему краю ряда — иначе она уезжала бы за край экрана. */
+  .juror__card {
+    --tx: 0;
+    left: 0;
+    right: auto;
+    width: min(16rem, calc(100vw - var(--pad) * 2));
+  }
+  .juror:nth-child(even) .juror__card {
+    left: auto;
+    right: 0;
+  }
 }
 
 @media (max-width: 640px) {
@@ -1608,10 +1679,48 @@ body.menu-open .burger i:nth-child(2) {
   }
 }
 
+/* --- Подложка «liquid glass» ----------------------------------------------
+   Общая для плашки cookie и карточек жюри: размывает то, что под ней, плюс
+   блик по верхней кромке. Стекло дымчатое, а не прозрачное — белый текст на
+   нём читается и над светлыми секциями. */
+.glass {
+  position: relative;
+  border-radius: 22px;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  /* плотность тонировки: над светлыми секциями её приходится поднимать,
+     иначе белый текст на просвечивающем кремовом фоне теряет контраст */
+  background: rgba(16, 16, 21, var(--glass-tint, 0.42));
+  -webkit-backdrop-filter: blur(22px) saturate(180%);
+  backdrop-filter: blur(22px) saturate(180%);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.3),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.08);
+  color: var(--paper);
+  overflow: hidden;
+  isolation: isolate;
+}
+.glass::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(
+    160deg,
+    rgba(255, 255, 255, 0.22) 0%,
+    rgba(255, 255, 255, 0.06) 38%,
+    rgba(255, 255, 255, 0) 70%
+  );
+  pointer-events: none;
+}
+/* если размытие не поддерживается — просто плотная тёмная подложка */
+@supports not ((backdrop-filter: blur(2px)) or (-webkit-backdrop-filter: blur(2px))) {
+  .glass {
+    background: rgba(15, 15, 19, 0.94);
+  }
+}
+
 /* --- Уведомление о cookie и персональных данных --------------------------- */
-/* Компактная карточка в правом нижнем углу: подложка «liquid glass» — размытие
-   того, что под ней, плюс блик по верхней кромке. «Соглашаюсь» прячет её
-   навсегда (localStorage). */
+/* Компактная карточка в правом нижнем углу; «Соглашаюсь» прячет её навсегда
+   (localStorage). */
 .consent {
   position: fixed;
   right: clamp(0.85rem, 2vw, 1.75rem);
@@ -1629,38 +1738,7 @@ body.menu-open .burger i:nth-child(2) {
   transform: none;
 }
 .consent__card {
-  position: relative;
   padding: clamp(1.1rem, 2.2vw, 1.45rem);
-  border-radius: 22px;
-  border: 1px solid rgba(255, 255, 255, 0.22);
-  /* дымчатое стекло, а не прозрачное: белый текст читается и над светлыми секциями */
-  background: rgba(16, 16, 21, 0.42);
-  -webkit-backdrop-filter: blur(22px) saturate(180%);
-  backdrop-filter: blur(22px) saturate(180%);
-  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.3),
-    inset 0 -1px 0 rgba(255, 255, 255, 0.08);
-  overflow: hidden;
-  isolation: isolate;
-}
-/* блик стекла: светлее сверху, к низу сходит на нет */
-.consent__card::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  background: linear-gradient(
-    160deg,
-    rgba(255, 255, 255, 0.22) 0%,
-    rgba(255, 255, 255, 0.06) 38%,
-    rgba(255, 255, 255, 0) 70%
-  );
-  pointer-events: none;
-}
-/* если размытие не поддерживается — просто плотная тёмная карточка */
-@supports not ((backdrop-filter: blur(2px)) or (-webkit-backdrop-filter: blur(2px))) {
-  .consent__card {
-    background: rgba(15, 15, 19, 0.94);
-  }
 }
 .consent__title {
   display: block;
