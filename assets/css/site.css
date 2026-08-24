@@ -831,7 +831,9 @@ body.menu-open .burger i:nth-child(2) {
   text-transform: uppercase;
   letter-spacing: -0.035em;
   line-height: 1.08;
-  font-size: clamp(1.35rem, 4.2vw, 3.6rem);
+  /* нижняя граница опущена ради 320px: «МУЗЫКАЛЬНОЕ» при 1.35rem не влезало
+     в строку вместе с номером и плюсом */
+  font-size: clamp(1.05rem, 4.2vw, 3.6rem);
 }
 .nom__plus {
   position: relative;
@@ -1041,16 +1043,22 @@ body.menu-open .burger i:nth-child(2) {
   outline-offset: 6px;
 }
 
+.juror__info {
+  position: relative;
+}
+
 /* Карточка с регалиями: та же подложка «liquid glass», что и у плашки cookie.
-   Всплывает над нижней частью портрета — сквозь стекло видно размытое фото.
-   Скрытая карточка остаётся в DOM и в дереве доступности (прячем прозрачностью,
-   а не visibility), поэтому скринридер читает описание вместе с именем. */
+   Всплывает над подписью, ложась на нижнюю часть портрета, — сквозь стекло
+   видно размытое фото. Скрытая карточка остаётся в DOM и в дереве доступности
+   (прячем прозрачностью, а не visibility), поэтому скринридер читает описание
+   вместе с именем. */
 .juror__card {
   --glass-tint: 0.66;
   position: absolute;
   left: 0;
   right: 0;
-  bottom: 0.4rem;
+  /* 100% — верх блока с подписью, то есть нижняя кромка портрета */
+  bottom: calc(100% + 0.4rem);
   z-index: 5;
   padding: 0.9rem 1rem 1rem;
   border-radius: 18px;
@@ -1066,10 +1074,7 @@ body.menu-open .burger i:nth-child(2) {
     translate: 0 0;
   }
 }
-/* focus-visible, а не focus-within: касание пальцем тоже ставит фокус на
-   портрет, и карточка переставала закрываться повторным тапом. */
-.juror:focus-visible .juror__card,
-.juror.is-open .juror__card {
+.juror:focus-visible .juror__card {
   opacity: 1;
   translate: 0 0;
 }
@@ -1719,21 +1724,56 @@ body.menu-open .burger i:nth-child(2) {
   }
 }
 
-@media (max-width: 700px) {
-  /* По одному портрету в ряд секция «Жюри» растягивалась на пять экранов */
-  .jury__grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-  /* Колонка в две полосы слишком узкая для текста, поэтому здесь карточка
-     шире ячейки. Чтобы она не уезжала за край экрана, её прижимает к внешнему
-     краю ряда: левая колонка — влево, правая — вправо. */
+/* Где наведения нет (телефоны, планшеты) — регалии показаны всегда и обычным
+   текстом: прятать их за касание неудобно, а стекло нужно только всплывающей
+   карточке. */
+@media (max-width: 700px), (hover: none) {
   .juror__card {
-    right: auto;
-    width: min(16rem, calc(100vw - var(--pad) * 2));
+    position: static;
+    width: auto;
+    margin-top: 0.5rem;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: none;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    box-shadow: none;
+    opacity: 1;
+    translate: none;
+    color: inherit;
+    text-align: inherit; /* по центру в сетке, по левому краю в списке */
   }
-  .juror:nth-child(even) .juror__card {
-    left: auto;
-    right: 0;
+  .juror__card::before {
+    display: none;
+  }
+  .juror__card-name {
+    display: none; /* имя уже стоит в подписи */
+  }
+  .juror__card-bio {
+    color: rgba(8, 8, 10, 0.66);
+    font-size: 0.7rem;
+  }
+}
+
+@media (max-width: 700px) {
+  /* Узкий экран: список перестраивается в строки «портрет — имя — регалии» */
+  .jury__grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: clamp(1rem, 3.5vw, 1.6rem);
+  }
+  .juror {
+    display: grid;
+    grid-template-columns: clamp(88px, 26vw, 132px) minmax(0, 1fr);
+    gap: clamp(0.9rem, 3.5vw, 1.4rem);
+    align-items: center;
+    text-align: left;
+  }
+  .juror__name {
+    margin-top: 0;
+  }
+  .juror__name i {
+    margin-top: 0.35rem;
   }
 }
 
