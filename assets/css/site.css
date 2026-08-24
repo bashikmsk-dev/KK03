@@ -240,6 +240,18 @@ body::after {
   }
 }
 
+/* На тач-устройствах размытие у зафиксированной плашки обходится слишком
+   дорого: браузер пересобирает подложку под ней на каждом кадре прокрутки, и
+   при замере на планшете каждый шестой кадр уходил в 33 мс вместо 16.7.
+   Там показываем ту же карточку, но с плотной подложкой без размытия. */
+@media (hover: none) {
+  .glass {
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    background: rgba(15, 15, 19, 0.92);
+  }
+}
+
 /* --- Раскладка ------------------------------------------------------------ */
 .section {
   position: relative;
@@ -1006,9 +1018,13 @@ body.menu-open .burger i:nth-child(2) {
   transition: transform 0.8s var(--ease), filter 0.6s var(--ease);
   filter: saturate(0.95);
 }
-.juror:hover .juror__ph img {
-  transform: scale(1.05);
-  filter: saturate(1.12);
+/* Только для мыши: на тач-экране палец, проезжающий по портрету во время
+   прокрутки, оставлял залипший :hover, и портрет дёргался масштабом. */
+@media (hover: hover) and (pointer: fine) {
+  .juror:hover .juror__ph img {
+    transform: scale(1.05);
+    filter: saturate(1.12);
+  }
 }
 /* Имя сверху, фамилия под ним — одинаковым кеглем у всех, поэтому подписи
    выстраиваются в общую сетку независимо от длины слов. */
