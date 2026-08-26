@@ -377,8 +377,13 @@
 
       let raf = 0;
       let running = false;
+      const FRAME_MS = 1000 / 30; // см. комментарий у частиц
+      let lastDraw = 0;
       const tick = (now) => {
-        draw(now / 1000);
+        if (now - lastDraw >= FRAME_MS - 1) {
+          lastDraw = now;
+          draw(now / 1000);
+        }
         raf = running ? requestAnimationFrame(tick) : 0;
       };
       const start = () => {
@@ -504,6 +509,7 @@
 
         const color = getComputedStyle(host).color.match(/\d+/g);
         if (color && color.length >= 3) rgb = color.slice(0, 3).join(', ');
+        sprite = null; // цвет или плотность пикселей могли смениться
 
         const quantity = Math.max(
           30,
@@ -513,17 +519,33 @@
         return true;
       };
 
+      /* Точка рисуется готовым спрайтом: строить путь с дугой на каждую из
+         полутора сотен точек в каждом кадре обходилось заметно дороже. */
+      let sprite = null;
+      const SPRITE_R = 8;
+      const makeSprite = () => {
+        const c = document.createElement('canvas');
+        const d = Math.ceil(SPRITE_R * 2 * dpr);
+        c.width = d;
+        c.height = d;
+        const g = c.getContext('2d');
+        g.fillStyle = `rgb(${rgb})`;
+        g.beginPath();
+        g.arc(d / 2, d / 2, d / 2, 0, Math.PI * 2);
+        g.fill();
+        sprite = c;
+      };
+
       const draw = () => {
         ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
         ctx.clearRect(0, 0, size.w, size.h);
+        if (!sprite) makeSprite();
         circles.forEach((c) => {
-          ctx.translate(c.translateX, c.translateY);
-          ctx.beginPath();
-          ctx.arc(c.x, c.y, c.size, 0, Math.PI * 2);
-          ctx.fillStyle = `rgba(${rgb}, ${c.alpha})`;
-          ctx.fill();
-          ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+          ctx.globalAlpha = c.alpha;
+          const d = c.size * 2;
+          ctx.drawImage(sprite, c.x + c.translateX - c.size, c.y + c.translateY - c.size, d, d);
         });
+        ctx.globalAlpha = 1;
       };
 
       /* Плавное затухание у границ блока: точка гаснет, не доходя до края. */
@@ -543,8 +565,25 @@
         }
       };
 
-      const step = () => {
-        const rect = canvas.getBoundingClientRect();
+      /* Точки дрейфуют медленно, поэтому канвас перерисовывается 30 раз в
+         секунду, а не 60: полноэкранный слой каждый кадр заново заливается и
+         уходит в композитор, и на этом спотыкался кружок-курсор. */
+      const FRAME_MS = 1000 / 30;
+      let lastDraw = 0;
+
+      const step = (now) => {
+        if (now - lastDraw < FRAME_MS - 1) {
+          raf = running ? requestAnimationFrame(step) : 0;
+          return;
+        }
+        lastDraw = now;
+        // getBoundingClientRect в каждом кадре заставлял браузер пересчитывать
+        // раскладку 60 раз в секунду; координаты блока меняются только при
+        // прокрутке и изменении размера, поэтому держим их в кэше.
+        if (rectDirty) {
+          rect = canvas.getBoundingClientRect();
+          rectDirty = false;
+        }
         const mx = pointer.x - rect.left - size.w / 2;
         const my = pointer.y - rect.top - size.h / 2;
         if (Math.abs(mx) < size.w / 2 && Math.abs(my) < size.h / 2) {
@@ -570,6 +609,13 @@
 
       let raf = 0;
       let running = false;
+      let rect = canvas.getBoundingClientRect();
+      let rectDirty = true;
+      const markDirty = () => {
+        rectDirty = true;
+      };
+      window.addEventListener('scroll', markDirty, { passive: true });
+      window.addEventListener('resize', markDirty, { passive: true });
       const start = () => {
         if (running || reduced) return;
         running = true;

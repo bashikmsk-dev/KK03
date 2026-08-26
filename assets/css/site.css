@@ -1104,6 +1104,11 @@ body.menu-open .burger i:nth-child(2) {
    вместе с именем. */
 .juror__card {
   --glass-tint: 0.66;
+  /* Размытие включается только вместе с самой карточкой: пять постоянно
+     размывающих подложек в секции заставляли браузер пересобирать её каждый
+     кадр, и кружок-курсор заметно запаздывал. */
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
   position: absolute;
   left: 0;
   right: 0;
@@ -1122,11 +1127,15 @@ body.menu-open .burger i:nth-child(2) {
   .juror:hover .juror__card {
     opacity: 1;
     translate: 0 0;
+    -webkit-backdrop-filter: blur(22px) saturate(180%);
+    backdrop-filter: blur(22px) saturate(180%);
   }
 }
 .juror:focus-visible .juror__card {
   opacity: 1;
   translate: 0 0;
+  -webkit-backdrop-filter: blur(22px) saturate(180%);
+  backdrop-filter: blur(22px) saturate(180%);
 }
 .juror__card-name {
   display: block;
