@@ -810,9 +810,43 @@ body.menu-open .burger i:nth-child(2) {
 }
 .noms__list {
   list-style: none;
-  margin: clamp(2rem, 5vw, 4rem) 0 0;
+  margin: 0;
   padding: 0;
   border-top: 1px solid var(--line-dark);
+}
+
+/* Подзаголовок группы: основной конкурс и специальные награды разведены,
+   потому что во вторые заявку не подают — ими отмечают работы конкурса. */
+.noms__group {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.35rem 1.2rem;
+  margin: clamp(2rem, 5vw, 4rem) 0 0.9rem;
+}
+.noms__label {
+  margin: 0;
+  font-family: var(--mono);
+  font-size: clamp(0.62rem, 0.85vw, 0.78rem);
+  letter-spacing: 0.34em;
+  text-transform: uppercase;
+}
+.noms__note {
+  margin: 0;
+  font-size: clamp(0.8rem, 1vw, 0.95rem);
+  color: rgba(8, 8, 10, 0.58);
+}
+.noms__group--special .noms__label {
+  color: var(--accent);
+}
+/* Акцентная линейка слева читается как «это подраздел» */
+.noms__list--special {
+  border-left: 2px solid var(--accent);
+  padding-left: clamp(0.9rem, 2vw, 1.6rem);
+}
+.nom--special .nom__num {
+  color: var(--accent);
+  opacity: 1;
 }
 .nom {
   border-bottom: 1px solid var(--line-dark);
