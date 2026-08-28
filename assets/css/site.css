@@ -1075,9 +1075,18 @@ body.menu-open .burger i:nth-child(2) {
 .juror__name span {
   display: block;
 }
+/* Страна: моноширинная строка под фамилией, кеглем между именем и номером */
+.juror__country {
+  margin-top: 0.4rem;
+  font-family: var(--mono);
+  font-weight: 400;
+  font-size: 0.68rem;
+  letter-spacing: 0.2em;
+  color: rgba(8, 8, 10, 0.62);
+}
 .juror__name i {
   display: block;
-  margin-top: 0.5rem;
+  margin-top: 0.35rem;
   font-family: var(--mono);
   font-style: normal;
   font-weight: 400;
