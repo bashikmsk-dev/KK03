@@ -376,6 +376,19 @@ body::after {
   border-bottom-color: var(--line);
 }
 
+/* Пока открыто мобильное меню, размытие у шапки выключено. Причина не в
+   красоте: backdrop-filter делает элемент containing block для потомков с
+   position: fixed, и панель меню, лежащая внутри шапки, сжималась до её
+   высоты — пункты вываливались поверх страницы. Фон всё равно закрывает
+   сама панель. Если когда-нибудь на шапке появится transform или filter,
+   эффект вернётся: их нужно гасить здесь же. */
+body.menu-open .header {
+  background: transparent;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  border-bottom-color: transparent;
+}
+
 .brand {
   display: flex;
   align-items: center;
