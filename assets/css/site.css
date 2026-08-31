@@ -1772,7 +1772,16 @@ body.menu-open .burger i:nth-child(2) {
   }
   .nav {
     position: fixed;
-    inset: 0;
+    /* Не inset: 0. Пока идёт переход открытия и закрытия, у шапки ещё остаётся
+       backdrop-filter, а он делает её containing block для этого блока —
+       «весь экран» превращался в высоту шапки на доли секунды. Явные размеры
+       экрана дают одинаковый результат в обоих случаях: шапка прижата к
+       левому верхнему углу окна, поэтому точка отсчёта та же. */
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    height: 100dvh;
     z-index: 110;
     flex-direction: column;
     justify-content: center;
