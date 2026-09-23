@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <url>
+    <loc>https://kk-03.vercel.app/</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://kk-03.vercel.app/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://kk-03.vercel.app/en/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://kk-03.vercel.app/" />
+    <lastmod>2026-09-23</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://kk-03.vercel.app/rules.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://kk-03.vercel.app/rules.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://kk-03.vercel.app/en/rules.html" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://kk-03.vercel.app/rules.html" />
+    <lastmod>2026-09-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://kk-03.vercel.app/privacy.html</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://kk-03.vercel.app/privacy.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://kk-03.vercel.app/en/privacy.html" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://kk-03.vercel.app/privacy.html" />
+    <lastmod>2026-09-23</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://kk-03.vercel.app/en/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://kk-03.vercel.app/en/" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://kk-03.vercel.app/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://kk-03.vercel.app/" />
+    <lastmod>2026-09-23</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://kk-03.vercel.app/en/rules.html</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://kk-03.vercel.app/en/rules.html" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://kk-03.vercel.app/rules.html" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://kk-03.vercel.app/rules.html" />
+    <lastmod>2026-09-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://kk-03.vercel.app/en/privacy.html</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://kk-03.vercel.app/en/privacy.html" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://kk-03.vercel.app/privacy.html" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://kk-03.vercel.app/privacy.html" />
+    <lastmod>2026-09-23</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+</urlset>

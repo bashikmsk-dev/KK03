@@ -1,5 +1,5 @@
 import { defineConfig } from 'vite';
-import { cp } from 'node:fs/promises';
+import { cp, readFile, writeFile } from 'node:fs/promises';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -22,6 +22,29 @@ function copyClassicScripts() {
       await cp(resolve(rootDir, 'assets/js'), resolve(rootDir, OUT_DIR, 'assets/js'), {
         recursive: true,
       });
+    },
+  };
+}
+
+/**
+ * Страница 404 отдаётся хостингом по любому несуществующему адресу, в том числе
+ * вложенному вроде /a/b/c. Относительные пути ./assets/… браузер разрешает
+ * относительно запрошенного адреса, поэтому на такой странице стили и скрипт
+ * не нашлись бы. Здесь и только здесь переводим их в абсолютные.
+ */
+function absoluteNotFoundLinks() {
+  return {
+    name: 'cyber-kino:absolute-404-links',
+    apply: 'build',
+    async closeBundle() {
+      const file = resolve(rootDir, OUT_DIR, '404.html');
+      let html;
+      try {
+        html = await readFile(file, 'utf8');
+      } catch {
+        return; // страницы нет в сборке — нечего править
+      }
+      await writeFile(file, html.replace(/(src|href)="\.\//g, '$1="/'), 'utf8');
     },
   };
 }
@@ -78,7 +101,7 @@ export default defineConfig({
   root: rootDir,
   base: './',
   publicDir: 'public',
-  plugins: [keepPageLinks(), copyClassicScripts()],
+  plugins: [keepPageLinks(), copyClassicScripts(), absoluteNotFoundLinks()],
   server: {
     port: 5173,
     open: false,
@@ -97,6 +120,7 @@ export default defineConfig({
         ru: resolve(rootDir, 'index.html'),
         ruRules: resolve(rootDir, 'rules.html'),
         ruPrivacy: resolve(rootDir, 'privacy.html'),
+        notFound: resolve(rootDir, '404.html'),
         en: resolve(rootDir, 'en/index.html'),
         enRules: resolve(rootDir, 'en/rules.html'),
         enPrivacy: resolve(rootDir, 'en/privacy.html'),

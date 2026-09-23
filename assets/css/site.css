@@ -1425,6 +1425,36 @@ body.menu-open .burger i:nth-child(2) {
   }
 }
 
+/* --- Страница 404 -------------------------------------------------------- */
+.notfound {
+  min-height: 78vh;
+  display: grid;
+  place-items: center;
+  text-align: center;
+}
+.notfound__inner {
+  max-width: 44rem;
+}
+.notfound__code {
+  font-size: min(18rem, 34vw);
+  line-height: 1;
+  margin: clamp(0.5rem, 2vw, 1rem) 0 0;
+}
+.notfound__text {
+  margin: clamp(1.4rem, 3vw, 2rem) auto 0;
+  max-width: 46ch;
+  font-size: clamp(0.95rem, 1.3vw, 1.2rem);
+  line-height: 1.6;
+  color: var(--muted);
+}
+.notfound__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: clamp(0.8rem, 2vw, 1.4rem);
+  margin-top: clamp(2rem, 4vw, 3rem);
+}
+
 .footer {
   padding: clamp(4rem, 9vw, 8rem) var(--pad) clamp(2rem, 4vw, 3rem);
   background: var(--ink);
