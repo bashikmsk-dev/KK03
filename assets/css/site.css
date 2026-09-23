@@ -1505,8 +1505,59 @@ body.menu-open .burger i:nth-child(2) {
   border-bottom: 1px solid var(--line);
   background: radial-gradient(90% 120% at 20% 0%, #16161d 0%, var(--ink) 70%);
 }
+/* Самое длинное слово на странице политики — «КОНФИДЕНЦИАЛЬНОСТИ»: при общем
+   кегле заголовка страницы правил оно не влезало бы в строку. */
+
+.legal-meta {
+  max-width: 62ch;
+  margin: clamp(1.6rem, 4vw, 2.6rem) 0 0;
+  font-size: clamp(0.85rem, 1.1vw, 1rem);
+  line-height: 1.6;
+  color: var(--muted);
+}
+.legal-details {
+  margin: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0 2rem;
+}
+.legal-details dt {
+  font-family: var(--mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-top: 1.2rem;
+}
+.legal-details dd {
+  margin: 0.3rem 0 0;
+  overflow-wrap: anywhere;
+}
+@media (min-width: 720px) {
+  .legal-details {
+    grid-template-columns: minmax(0, 15rem) minmax(0, 1fr);
+    align-items: baseline;
+  }
+  .legal-details dd {
+    margin-top: 1.2rem;
+  }
+}
+
 .rules-hero h1 {
   font-size: clamp(2.6rem, 11vw, 11rem);
+}
+/* Самое длинное слово на странице политики — «КОНФИДЕНЦИАЛЬНОСТИ»: при общем
+   кегле заголовка оно не влезало бы в строку ни на одной ширине. Селектор с
+   двумя классами намеренно: у правила выше та же специфичность. */
+.rules-hero.rules-hero--legal h1 {
+  font-size: min(11rem, 9.4vw);
+}
+/* «КОНФИДЕНЦИАЛЬНОСТИ» — 18 знаков: в Unbounded 900 это шире экрана при любом
+   кегле заголовка, поэтому вторая строка набрана мельче первой. */
+.rules-hero__sub {
+  display: block;
+  font-size: 0.46em;
+  letter-spacing: -0.035em;
 }
 /* Пять карточек в сетке из auto-fit оставляли в последнем ряду пустую ячейку —
    на тёмном фоне она читалась как серый провал. Поэтому число колонок задано
@@ -1968,6 +2019,19 @@ body.menu-open .burger i:nth-child(2) {
   line-height: 1.55;
   color: rgba(255, 255, 255, 0.78);
   text-wrap: pretty;
+}
+.consent__link {
+  display: inline-block;
+  margin-top: 0.7rem;
+  font-size: 0.72rem;
+  letter-spacing: 0.02em;
+  color: rgba(255, 255, 255, 0.82);
+  text-decoration: underline;
+  text-underline-offset: 0.25em;
+  transition: color 0.3s var(--ease);
+}
+.consent__link:hover {
+  color: #fff;
 }
 .consent__btn {
   display: block;

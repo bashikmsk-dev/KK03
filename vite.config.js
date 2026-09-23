@@ -96,8 +96,10 @@ export default defineConfig({
       input: {
         ru: resolve(rootDir, 'index.html'),
         ruRules: resolve(rootDir, 'rules.html'),
+        ruPrivacy: resolve(rootDir, 'privacy.html'),
         en: resolve(rootDir, 'en/index.html'),
         enRules: resolve(rootDir, 'en/rules.html'),
+        enPrivacy: resolve(rootDir, 'en/privacy.html'),
       },
     },
   },
