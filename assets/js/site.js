@@ -801,6 +801,5 @@
     if (window.CyberKino && window.CyberKino.initHero) {
       window.CyberKino.initHero($('.hero__stage'));
     }
-
   });
 })();
