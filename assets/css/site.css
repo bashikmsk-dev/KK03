@@ -1427,16 +1427,39 @@ body.menu-open .burger i:nth-child(2) {
 
 /* --- Страница 404 -------------------------------------------------------- */
 .notfound {
+  /* Поля меньше, чем у обычных секций: иначе портрет, цифры и кнопки
+     не помещаются в один экран на ноутбуке. */
+  padding-block: clamp(2rem, 4vw, 3.5rem);
   min-height: 78vh;
-  display: grid;
-  place-items: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   text-align: center;
 }
+/* Тот же персонаж, что на первом экране, но без эффекта с курсором. Лежит над
+   цифрами, а не под ними: за «404» лицо не читалось. Цифры чуть наезжают на
+   нижний край кадра, поэтому блок держится как одна композиция. */
+.notfound__hero {
+  width: min(60vh, 94vw);
+  height: auto;
+  margin-bottom: clamp(-5rem, -7vw, -2rem);
+  /* Края кадра растворяются, иначе на странице виден прямоугольник врезки:
+     фон у картинки не чисто чёрный, и режим наложения его не убирает. */
+  -webkit-mask-image: radial-gradient(closest-side at 50% 46%, #000 42%, transparent 88%);
+  mask-image: radial-gradient(closest-side at 50% 46%, #000 42%, transparent 88%);
+  pointer-events: none;
+  user-select: none;
+}
 .notfound__inner {
+  position: relative;
+  z-index: 1;
   max-width: 44rem;
 }
 .notfound__code {
-  font-size: min(18rem, 34vw);
+  /* Размер считается и от высоты окна: на ноутбуке с экраном 720px портрет,
+     цифры и кнопки иначе не умещаются в один экран. */
+  font-size: min(18rem, 34vw, 32vh);
   line-height: 1;
   margin: clamp(0.5rem, 2vw, 1rem) 0 0;
 }
