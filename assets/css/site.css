@@ -1438,8 +1438,13 @@ body.menu-open .burger i:nth-child(2) {
 }
 .contacts__item {
   container-type: inline-size;
+  /* Колонки тянутся на всю ширину секции, поэтому содержимое центрируем:
+     иначе оба адреса жмутся к левым краям своих половин и блок читается
+     съехавшим влево. */
+  text-align: center;
 }
 .contacts__item .eyebrow {
+  justify-content: center;
   margin-bottom: 0.9rem;
 }
 .contacts__item a {
