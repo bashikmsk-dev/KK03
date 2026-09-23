@@ -1367,6 +1367,14 @@ body.menu-open .burger i:nth-child(2) {
   height: 22px;
   flex: 0 0 auto;
 }
+/* В средних ширинах три плитки в ряд оставляют оговорке около 160px, и её
+   строки рвутся сверх расставленных переносов. Здесь ряд идёт как 2 + 1:
+   Instagram занимает свою строку целиком, и текст встаёт как задумано. */
+@media (min-width: 521px) and (max-width: 1220px) {
+  .social a {
+    flex-basis: 45%;
+  }
+}
 /* В русской версии логотип Instagram не используется — на его месте кружок,
    а у названия стоит звёздочка со сноской под списком соцсетей. */
 .social__dot {
@@ -1389,7 +1397,8 @@ body.menu-open .burger i:nth-child(2) {
 }
 .social__fine {
   display: block;
-  max-width: 44ch;
+  /* Переносы расставлены вручную в разметке, поэтому ограничение по ширине
+     здесь только мешало бы: оно рвало строки в других местах. */
   margin-top: 0.5rem;
   font-family: var(--mono);
   font-size: 0.56rem;
@@ -1398,6 +1407,12 @@ body.menu-open .burger i:nth-child(2) {
   letter-spacing: 0.02em;
   text-transform: none;
   opacity: 0.5;
+}
+/* На узких телефонах строка не помещается в плитку целиком — чуть мельче */
+@media (max-width: 389px) {
+  .social__fine {
+    font-size: 0.5rem;
+  }
 }
 
 .footer {
