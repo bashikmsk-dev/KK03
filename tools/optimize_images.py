@@ -22,11 +22,15 @@ IMG = ROOT / "assets" / "img"
 TARGETS = {
     "enshtane-01.png": (640, 960, 1440, 1920),
     "enshtane-02.png": (640, 960, 1440, 1920),
+    "enshtane-404.png": (640, 960, 1280),
     "logo.png": (480, 720, 1200),
     "logo-mini-white.png": (140, 280),
 }
 JURY_WIDTHS = (250, 500)  # исходники — квадраты 500×500
 QUALITY = 78
+# у картинки для 404 прозрачный фон и много глитч-шума: на общем качестве
+# варианты весили под 220 КБ, а артефакты сжатия на таком рисунке не видны
+QUALITY_OVERRIDES = {"enshtane-404.png": 62}
 
 
 def variants(src: Path, widths: tuple[int, ...]) -> None:
@@ -40,7 +44,8 @@ def variants(src: Path, widths: tuple[int, ...]) -> None:
             continue
         h = round(im.height * w / im.width)
         out = src.with_name(f"{src.stem}-{w}.webp")
-        im.resize((w, h), Image.LANCZOS).save(out, "WEBP", quality=QUALITY, method=6)
+        quality = QUALITY_OVERRIDES.get(src.name, QUALITY)
+        im.resize((w, h), Image.LANCZOS).save(out, "WEBP", quality=quality, method=6)
         print(f"  → {out.relative_to(ROOT)}  {w}×{h}  {out.stat().st_size // 1024} КБ")
 
 

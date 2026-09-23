@@ -1440,14 +1440,11 @@ body.menu-open .burger i:nth-child(2) {
 /* Тот же персонаж, что на первом экране, но без эффекта с курсором. Лежит над
    цифрами, а не под ними: за «404» лицо не читалось. Цифры чуть наезжают на
    нижний край кадра, поэтому блок держится как одна композиция. */
+/* Вырезка с прозрачным фоном — ни маска, ни режим наложения не нужны. */
 .notfound__hero {
-  width: min(60vh, 94vw);
+  width: min(46vh, 86vw);
   height: auto;
-  margin-bottom: clamp(-5rem, -7vw, -2rem);
-  /* Края кадра растворяются, иначе на странице виден прямоугольник врезки:
-     фон у картинки не чисто чёрный, и режим наложения его не убирает. */
-  -webkit-mask-image: radial-gradient(closest-side at 50% 46%, #000 42%, transparent 88%);
-  mask-image: radial-gradient(closest-side at 50% 46%, #000 42%, transparent 88%);
+  margin-bottom: clamp(-3rem, -4vw, -1rem);
   pointer-events: none;
   user-select: none;
 }

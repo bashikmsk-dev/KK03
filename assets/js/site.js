@@ -244,12 +244,40 @@
   }
 
   /* --- Бегущая строка: дублируем содержимое для бесшовного цикла ----------- */
+  /* Дорожка едет на -50% своей ширины, поэтому каждая из двух половин должна
+     быть не уже экрана — иначе в конце цикла появляется пустое место. Копий
+     делаем столько, сколько нужно под текущую ширину окна, и пересчитываем
+     при изменении размера. */
   function initMarquee() {
-    $$('.marquee__track').forEach((track) => {
-      if (track.dataset.cloned === 'done') return;
-      track.innerHTML += track.innerHTML;
-      track.dataset.cloned = 'done';
-    });
+    const tracks = $$('.marquee__track');
+    if (!tracks.length) return;
+
+    const fill = (track) => {
+      const source = track.dataset.source || track.innerHTML;
+      track.dataset.source = source;
+
+      track.innerHTML = source;           // меряем ширину одной копии
+      const one = track.scrollWidth;
+      if (!one) return;
+
+      const perHalf = Math.max(1, Math.ceil((window.innerWidth + 1) / one));
+      track.innerHTML = source.repeat(perHalf * 2);
+    };
+
+    tracks.forEach(fill);
+
+    let pending = 0;
+    window.addEventListener(
+      'resize',
+      () => {
+        if (pending) cancelAnimationFrame(pending);
+        pending = requestAnimationFrame(() => {
+          pending = 0;
+          tracks.forEach(fill);
+        });
+      },
+      { passive: true }
+    );
   }
 
   /* --- Фон из «плывущих» кривых -------------------------------------------

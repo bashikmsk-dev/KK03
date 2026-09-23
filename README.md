@@ -55,6 +55,7 @@ npm run dev
 | `Logo.png` | `assets/img/logo.png` | настоящий |
 | `Enshtane 01.png` | `assets/img/enshtane-01.png` | настоящий |
 | `Enshtane 02.png` | `assets/img/enshtane-02.png` | настоящий |
+| Эйнштейн для страницы 404 | `assets/img/enshtane-404.png` | настоящий, вырезка с прозрачным фоном |
 | `bashilov.png` | `assets/img/jury/bashilov.png` | настоящий |
 | `bluket.png` | `assets/img/jury/bluket.png` | настоящий |
 | `gavrilov.png` | `assets/img/jury/gavrilov.png` | настоящий |
