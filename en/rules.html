@@ -58,6 +58,11 @@
           <h2 class="eyebrow" style="margin: clamp(2.5rem, 6vw, 4.5rem) 0 0">Deadlines</h2>
           <div class="deadlines">
             <div class="deadline">
+              <span>Entries open</span>
+              <b>From 25.10.2026</b>
+              <p>Submissions are accepted from 25 October 2026.</p>
+            </div>
+            <div class="deadline">
               <span>Year of completion</span>
               <b>After 01.01.2025</b>
               <p>Films must be completed after 1 January 2025.</p>
@@ -74,17 +79,20 @@
             </div>
             <div class="deadline">
               <span>Notifications and venues</span>
-              <b>−3 weeks</b>
+              <b>−2 weeks</b>
               <p>
-                Official Selection notifications are sent no later than 3 weeks before the Festival;
+                Official Selection notifications are sent no later than 2 weeks before the Festival;
                 the final venues are confirmed within the same period. The list of Winners is published
                 no later than one week after the notification.
               </p>
             </div>
             <div class="deadline">
               <span>Running time</span>
-              <b>1–30 minutes</b>
-              <p>The running time of films must be no less than 1 minute and no more than 30 minutes.</p>
+              <b>Up to 30 minutes</b>
+              <p>
+                The running time of films must be no less than 1 minute and no more than 30 minutes.
+                The exception is the AI Advertising category, which accepts works from 10 seconds.
+              </p>
             </div>
           </div>
         </div>
@@ -242,7 +250,8 @@
               </li>
               <li>
                 The running time of films submitted to the competition must be no less than 1 minute
-                and no more than 30 minutes.
+                and no more than 30 minutes. The exception is the AI Advertising category, which
+                accepts works from 10 seconds.
               </li>
               <li>Films must be completed after 1 January 2025.</li>
               <li>We do not accept unfinished copies of films.</li>
@@ -263,7 +272,7 @@
             <h2>Notification</h2>
             <p>
               Directors whose films have been accepted for the competition (“Official Selection”) will
-              be sent notifications by email no later than 3 weeks before the Festival takes place. The
+              be sent notifications by email no later than 2 weeks before the Festival takes place. The
               list of accepted films will also be published on our website. The list of winners
               (“Winners”) will be published no later than one week after the official selection
               notification has been sent.
@@ -277,7 +286,7 @@
               <li>We do not screen all submitted films, only those highly rated by the Jury.</li>
               <li>
                 The main venue of our events is in Moscow; the final venues are confirmed no later than
-                3 weeks before the Event takes place.
+                2 weeks before the Event takes place.
               </li>
               <li>Winners are included in the festival’s competition programme.</li>
             </ul>
@@ -427,9 +436,22 @@
                   <input id="f-country" name="country" type="text" maxlength="100" required autocomplete="country-name" />
                 </div>
                 <div class="field">
-                  <label for="f-duration">Running time, minutes</label>
-                  <input id="f-duration" name="duration" type="number" min="1" max="30" step="1" required inputmode="numeric" />
-                  <span class="field__hint">Between 1 and 30 minutes.</span>
+                  <label for="f-duration">Running time</label>
+                  <input
+                    id="f-duration"
+                    name="duration"
+                    type="text"
+                    inputmode="numeric"
+                    maxlength="6"
+                    placeholder="12:30"
+                    required
+                    autocomplete="off"
+                    data-dur-hint="Minutes and seconds, e.g. 12:30. From 1:00 to 30:00."
+                    data-dur-hint-ad="Minutes and seconds, e.g. 0:30. AI Advertising starts from 0:10."
+                    data-dur-error="Enter the running time as 12:30 — from 1:00 to 30:00."
+                    data-dur-error-ad="Enter the running time as 0:30 — from 0:10 to 30:00."
+                  />
+                  <span class="field__hint" data-duration-hint>Minutes and seconds, e.g. 12:30. From 1:00 to 30:00.</span>
                 </div>
                 <div class="field field--wide">
                   <label for="f-category">Category</label>
@@ -476,8 +498,8 @@
                   <input type="checkbox" name="agreeData" required />
                   <span>
                     I consent to the processing of my personal data under the
-                    <a href="./privacy.html">Privacy Policy</a>, including its transfer to Google LLC
-                    services, where the register of entries is kept
+                    <a href="./privacy.html">Privacy Policy</a>, including its transfer to Google
+                    (USA) services, where the register of entries is kept
                   </span>
                 </label>
               </div>

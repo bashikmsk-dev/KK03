@@ -806,12 +806,58 @@
      Адрес приёмника лежит в assets/js/config.js.
      Отправляем JSON как text/plain: так браузер считает запрос «простым» и не
      шлёт предварительный OPTIONS, который Google Apps Script не обрабатывает. */
+  /* Хронометраж вводится как «12:30» или просто «12» (минуты). Нижняя граница
+     зависит от номинации: у ИИ-рекламы ролик может быть от 10 секунд, у
+     остальных — от минуты. Возвращает функцию, приводящую ввод к «мм:сс». */
+  function initDurationField(form) {
+    const input = form.elements.duration;
+    const category = form.elements.category;
+    const hint = $('[data-duration-hint]', form);
+    const MAX = 30 * 60;
+    const toText = (sec) => Math.floor(sec / 60) + ':' + String(sec % 60).padStart(2, '0');
+
+    const parse = (value) => {
+      const parts = String(value).trim().replace(/[.,]/, ':').match(/^(\d{1,2})(?::(\d{1,2}))?$/);
+      if (!parts) return null;
+      const seconds = Number(parts[2] || 0);
+      if (seconds > 59) return null;
+      return Number(parts[1]) * 60 + seconds;
+    };
+
+    if (!input || !category) return (value) => value;
+
+    const isAd = () => /реклам|advertis/i.test(category.value);
+    const check = () => {
+      const min = isAd() ? 10 : 60;
+      const sec = parse(input.value);
+      const ok = !input.value.trim() || (sec !== null && sec >= min && sec <= MAX);
+      input.setCustomValidity(
+        ok ? '' : (isAd() ? input.dataset.durErrorAd : input.dataset.durError) || ''
+      );
+    };
+    const sync = () => {
+      if (hint) hint.textContent = (isAd() ? input.dataset.durHintAd : input.dataset.durHint) || '';
+      check();
+    };
+
+    category.addEventListener('change', sync);
+    input.addEventListener('input', check);
+    sync();
+
+    return (value) => {
+      const sec = parse(value);
+      return sec === null ? String(value || '').trim() : toText(sec);
+    };
+  }
+
   function initApplyForm() {
     const form = $('#apply-form');
     if (!form) return;
 
     const cfg = window.CYBER_KINO_FORM || {};
     const endpoint = String(cfg.endpoint || '').trim();
+
+    const normalizeDuration = initDurationField(form);
 
     const status = $('[data-apply-status]', form);
     const say = (text, mod) => {
@@ -837,6 +883,7 @@
       });
       payload.agreeRules = form.elements.agreeRules.checked;
       payload.agreeData = form.elements.agreeData.checked;
+      payload.duration = normalizeDuration(payload.duration);
 
       form.classList.add('is-sending');
       say(form.dataset.msgSending);

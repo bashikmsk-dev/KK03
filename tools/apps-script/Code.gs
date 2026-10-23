@@ -41,7 +41,7 @@ const COLUMNS = [
   ['Страна заявителя', 'applicantCountry'],
   ['E-mail', 'email'],
   ['Страна производства', 'country'],
-  ['Хронометраж, мин', 'duration'],
+  ['Хронометраж (мин:сек)', 'duration'],
   ['Номинация', 'category'],
   ['Ссылка на просмотр', 'screeningLink'],
   ['Пароль к ссылке', 'screeningPassword'],
@@ -187,13 +187,13 @@ function confirmToApplicant(data) {
       ? '<div style="font-family:Arial,sans-serif;font-size:14px">' +
         '<p>Здравствуйте! Мы получили заявку на фильм «' +
         escapeHtml(data.titleEn) +
-        '».</p><p>Уведомление об отборе придёт не позднее чем за три недели до фестиваля. ' +
+        '».</p><p>Уведомление об отборе придёт не позднее чем за две недели до фестиваля. ' +
         'Если нужно что-то дополнить, ответьте на это письмо.</p>' +
         '<p>— Фестиваль «Кибер Кино»</p></div>'
       : '<div style="font-family:Arial,sans-serif;font-size:14px">' +
         '<p>Hello! We have received your submission for “' +
         escapeHtml(data.titleEn) +
-        '”.</p><p>Selection notices are sent no later than three weeks before the festival. ' +
+        '”.</p><p>Selection notices are sent no later than two weeks before the festival. ' +
         'If you need to add anything, just reply to this email.</p>' +
         '<p>— Cyber Kino Festival</p></div>',
   });
