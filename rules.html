@@ -102,7 +102,7 @@
             <li><a href="#screenings">Показы</a></li>
             <li><a href="#misc">Разное</a></li>
             <li><a href="#legal">Правовые вопросы</a></li>
-            <li data-apply-only hidden><a href="#apply">Подать заявку</a></li>
+            <li><a href="#apply">Подать заявку</a></li>
           </ol>
         </aside>
 
@@ -118,7 +118,7 @@
               <dt>Тема письма</dt>
               <dd>Подача заявки 2026</dd>
             </dl>
-            <p style="margin: 0" data-apply-only hidden>
+            <p style="margin: 0">
               Либо заполните <a href="#apply">форму в конце страницы</a> — она отправит организаторам
               те же сведения.
             </p>
@@ -394,52 +394,61 @@
             </div>
           </section>
 
-          <section id="apply" data-apply-only hidden>
+          <section id="apply">
             <h2>Подать заявку</h2>
             <p>
-              Форма отправляет организаторам те же сведения, что и письмо. Поля со звёздочкой
-              обязательны. После отправки на указанную почту придёт подтверждение.
+              Форма отправляет организаторам те же сведения, что и письмо. Заполнить нужно все
+              поля — при отборе важна каждая строка. После отправки на указанную почту придёт
+              подтверждение.
             </p>
 
             <form
               class="apply"
               id="apply-form"
+              novalidate
+              data-msg-invalid="Заполнены не все поля — проверьте подсвеченные строки."
               data-msg-sending="Отправляем заявку…"
               data-msg-done="Заявка отправлена. Подтверждение придёт на указанную почту."
               data-msg-error="Отправить не удалось. Попробуйте ещё раз или напишите письмом на submit@cyber-kino-festival.ru."
             >
               <div class="apply__grid">
                 <div class="field">
-                  <label for="f-title-en">Название фильма на английском *</label>
+                  <label for="f-title-en">Название фильма на английском</label>
                   <input id="f-title-en" name="titleEn" type="text" maxlength="200" required autocomplete="off" />
                 </div>
                 <div class="field">
                   <label for="f-title-orig">Название на языке оригинала</label>
-                  <input id="f-title-orig" name="titleOriginal" type="text" maxlength="200" autocomplete="off" />
+                  <input id="f-title-orig" name="titleOriginal" type="text" maxlength="200" required autocomplete="off" />
+                  <span class="field__hint">Если оригинал на английском, повторите английское название.</span>
                 </div>
                 <div class="field">
-                  <label for="f-director">Режиссёр *</label>
+                  <label for="f-director">Режиссёр</label>
                   <input id="f-director" name="director" type="text" maxlength="200" required autocomplete="off" />
                 </div>
                 <div class="field">
-                  <label for="f-applicant">Заявитель: имя или компания *</label>
+                  <label for="f-applicant">Заявитель: имя или компания</label>
                   <input id="f-applicant" name="applicant" type="text" maxlength="200" required autocomplete="name" />
                 </div>
                 <div class="field">
-                  <label for="f-email">E-mail для связи *</label>
+                  <label for="f-applicant-country">Страна заявителя</label>
+                  <input id="f-applicant-country" name="applicantCountry" type="text" maxlength="100" required autocomplete="country-name" />
+                  <span class="field__hint">Страна, которую представляет подающий заявку.</span>
+                </div>
+                <div class="field">
+                  <label for="f-email">E-mail для связи</label>
                   <input id="f-email" name="email" type="email" maxlength="200" required autocomplete="email" />
                 </div>
                 <div class="field">
-                  <label for="f-country">Страна производства *</label>
+                  <label for="f-country">Страна производства</label>
                   <input id="f-country" name="country" type="text" maxlength="100" required autocomplete="country-name" />
                 </div>
                 <div class="field">
-                  <label for="f-duration">Хронометраж, минут *</label>
+                  <label for="f-duration">Хронометраж, минут</label>
                   <input id="f-duration" name="duration" type="number" min="1" max="30" step="1" required inputmode="numeric" />
                   <span class="field__hint">От 1 до 30 минут.</span>
                 </div>
-                <div class="field">
-                  <label for="f-category">Номинация *</label>
+                <div class="field field--wide">
+                  <label for="f-category">Номинация</label>
                   <select id="f-category" name="category" required>
                     <option value="" selected disabled>Выберите номинацию</option>
                     <option>ИИ-короткий метр</option>
@@ -449,7 +458,7 @@
                   </select>
                 </div>
                 <div class="field field--wide">
-                  <label for="f-link">Ссылка для просмотра фильма *</label>
+                  <label for="f-link">Ссылка для просмотра фильма</label>
                   <input id="f-link" name="screeningLink" type="url" placeholder="https://" maxlength="500" required />
                   <span class="field__hint">
                     Проверьте, что ссылка открывается. Фильм должен быть на английском языке или с
@@ -458,17 +467,18 @@
                 </div>
                 <div class="field">
                   <label for="f-password">Пароль к ссылке</label>
-                  <input id="f-password" name="screeningPassword" type="text" maxlength="100" autocomplete="off" />
+                  <input id="f-password" name="screeningPassword" type="text" maxlength="100" required autocomplete="off" />
+                  <span class="field__hint">Если ссылка открывается без пароля, напишите «нет».</span>
                 </div>
                 <div class="field">
                   <label for="f-materials">Ссылка на материалы</label>
-                  <input id="f-materials" name="materialsLink" type="url" placeholder="https://" maxlength="500" />
+                  <input id="f-materials" name="materialsLink" type="url" placeholder="https://" maxlength="500" required />
                   <span class="field__hint">
                     Постер, кадры, субтитры .srt, сведения о создателях — одной папкой.
                   </span>
                 </div>
                 <div class="field field--wide">
-                  <label for="f-synopsis">Синопсис *</label>
+                  <label for="f-synopsis">Синопсис</label>
                   <textarea id="f-synopsis" name="synopsis" rows="5" maxlength="3000" required></textarea>
                 </div>
               </div>
@@ -476,14 +486,14 @@
               <div class="apply__consent">
                 <label class="check">
                   <input type="checkbox" name="agreeRules" required />
-                  <span>Я ознакомился с Правилами и условиями участия и принимаю их *</span>
+                  <span>Я ознакомился с Правилами и условиями участия и принимаю их</span>
                 </label>
                 <label class="check">
                   <input type="checkbox" name="agreeData" required />
                   <span>
                     Я даю согласие на обработку персональных данных на условиях
                     <a href="./privacy.html">Политики конфиденциальности</a>, в том числе на их
-                    трансграничную передачу в сервисы Google LLC, где ведётся реестр заявок *
+                    трансграничную передачу в сервисы Google LLC, где ведётся реестр заявок
                   </span>
                 </label>
               </div>

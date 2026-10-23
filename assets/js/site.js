@@ -803,8 +803,7 @@
   }
 
   /* --- Форма заявки --------------------------------------------------------
-     Адрес приёмника лежит в assets/js/config.js. Пока он пустой, секция с
-     формой остаётся скрытой и на странице работает только почтовый путь.
+     Адрес приёмника лежит в assets/js/config.js.
      Отправляем JSON как text/plain: так браузер считает запрос «простым» и не
      шлёт предварительный OPTIONS, который Google Apps Script не обрабатывает. */
   function initApplyForm() {
@@ -813,11 +812,6 @@
 
     const cfg = window.CYBER_KINO_FORM || {};
     const endpoint = String(cfg.endpoint || '').trim();
-    if (!endpoint) return;
-
-    $$('[data-apply-only]').forEach((el) => {
-      el.hidden = false;
-    });
 
     const status = $('[data-apply-status]', form);
     const say = (text, mod) => {
@@ -830,7 +824,9 @@
     form.addEventListener('submit', (e) => {
       e.preventDefault();
       form.classList.add('is-checked');
-      if (!form.reportValidity()) return;
+      if (!form.reportValidity()) return say(form.dataset.msgInvalid, 'error');
+      // адрес приёмника не прописан — молча терять заявку нельзя
+      if (!endpoint) return say(form.dataset.msgError, 'error');
 
       const payload = {
         key: cfg.key || '',

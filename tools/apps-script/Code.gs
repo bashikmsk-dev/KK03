@@ -38,6 +38,7 @@ const COLUMNS = [
   ['Название (оригинал)', 'titleOriginal'],
   ['Режиссёр', 'director'],
   ['Заявитель', 'applicant'],
+  ['Страна заявителя', 'applicantCountry'],
   ['E-mail', 'email'],
   ['Страна производства', 'country'],
   ['Хронометраж, мин', 'duration'],
@@ -50,17 +51,24 @@ const COLUMNS = [
   ['Согласие на обработку данных', 'agreeData'],
 ];
 
-/** Поля, без которых заявку принимать нельзя. */
+/**
+ * Поля, без которых заявку принимать нельзя.
+ * Сейчас обязательны все: форма на сайте тоже не даёт отправить пустую строку.
+ */
 const REQUIRED = [
   'titleEn',
+  'titleOriginal',
   'director',
   'applicant',
+  'applicantCountry',
   'email',
   'country',
   'duration',
   'category',
   'screeningLink',
+  'screeningPassword',
   'synopsis',
+  'materialsLink',
 ];
 
 function doPost(e) {
@@ -117,13 +125,25 @@ function appendRow(data) {
   if (!sheet) {
     sheet = book.insertSheet(SHEET_NAME);
   }
+
+  const header = COLUMNS.map(function (c) {
+    return c[0];
+  });
+
   if (sheet.getLastRow() === 0) {
-    const header = COLUMNS.map(function (c) {
-      return c[0];
-    });
     sheet.appendRow(header);
     sheet.getRange(1, 1, 1, header.length).setFontWeight('bold');
     sheet.setFrozenRows(1);
+  } else {
+    // если в Code.gs добавили колонку, шапка в уже существующей таблице
+    // отстанет от COLUMNS — подтягиваем её, чтобы подписи не разъехались
+    const current = sheet.getRange(1, 1, 1, header.length).getValues()[0];
+    const same = header.every(function (title, i) {
+      return String(current[i] || '') === title;
+    });
+    if (!same) {
+      sheet.getRange(1, 1, 1, header.length).setValues([header]).setFontWeight('bold');
+    }
   }
 
   sheet.appendRow(
