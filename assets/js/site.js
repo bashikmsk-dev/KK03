@@ -863,7 +863,12 @@
           form.classList.remove('is-checked');
           say(form.dataset.msgDone, 'done');
         })
-        .catch(() => say(form.dataset.msgError, 'error'))
+        .catch((err) => {
+          // причина видна только в консоли: посетителю она ни о чём не говорит,
+          // а при разборе проблемы это первое, что нужно знать
+          console.error('[apply]', err);
+          say(form.dataset.msgError, 'error');
+        })
         .then(() => form.classList.remove('is-sending'));
     });
   }
