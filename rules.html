@@ -102,6 +102,7 @@
             <li><a href="#screenings">Показы</a></li>
             <li><a href="#misc">Разное</a></li>
             <li><a href="#legal">Правовые вопросы</a></li>
+            <li data-apply-only hidden><a href="#apply">Подать заявку</a></li>
           </ol>
         </aside>
 
@@ -117,6 +118,10 @@
               <dt>Тема письма</dt>
               <dd>Подача заявки 2026</dd>
             </dl>
+            <p style="margin: 0" data-apply-only hidden>
+              Либо заполните <a href="#apply">форму в конце страницы</a> — она отправит организаторам
+              те же сведения.
+            </p>
             <p style="margin: 0">
               Перед отправкой фильма, пожалуйста, внимательно ознакомьтесь с данными Правилами и
               Условиями. Представляя свой фильм на конкурс Кибер Кино (ISFF), вы чётко понимаете и
@@ -388,6 +393,117 @@
               <a class="btn btn--ghost" href="./index.html">На главную</a>
             </div>
           </section>
+
+          <section id="apply" data-apply-only hidden>
+            <h2>Подать заявку</h2>
+            <p>
+              Форма отправляет организаторам те же сведения, что и письмо. Поля со звёздочкой
+              обязательны. После отправки на указанную почту придёт подтверждение.
+            </p>
+
+            <form
+              class="apply"
+              id="apply-form"
+              data-msg-sending="Отправляем заявку…"
+              data-msg-done="Заявка отправлена. Подтверждение придёт на указанную почту."
+              data-msg-error="Отправить не удалось. Попробуйте ещё раз или напишите письмом на submit@cyber-kino-festival.ru."
+            >
+              <div class="apply__grid">
+                <div class="field">
+                  <label for="f-title-en">Название фильма на английском *</label>
+                  <input id="f-title-en" name="titleEn" type="text" maxlength="200" required autocomplete="off" />
+                </div>
+                <div class="field">
+                  <label for="f-title-orig">Название на языке оригинала</label>
+                  <input id="f-title-orig" name="titleOriginal" type="text" maxlength="200" autocomplete="off" />
+                </div>
+                <div class="field">
+                  <label for="f-director">Режиссёр *</label>
+                  <input id="f-director" name="director" type="text" maxlength="200" required autocomplete="off" />
+                </div>
+                <div class="field">
+                  <label for="f-applicant">Заявитель: имя или компания *</label>
+                  <input id="f-applicant" name="applicant" type="text" maxlength="200" required autocomplete="name" />
+                </div>
+                <div class="field">
+                  <label for="f-email">E-mail для связи *</label>
+                  <input id="f-email" name="email" type="email" maxlength="200" required autocomplete="email" />
+                </div>
+                <div class="field">
+                  <label for="f-country">Страна производства *</label>
+                  <input id="f-country" name="country" type="text" maxlength="100" required autocomplete="country-name" />
+                </div>
+                <div class="field">
+                  <label for="f-duration">Хронометраж, минут *</label>
+                  <input id="f-duration" name="duration" type="number" min="1" max="30" step="1" required inputmode="numeric" />
+                  <span class="field__hint">От 1 до 30 минут.</span>
+                </div>
+                <div class="field">
+                  <label for="f-category">Номинация *</label>
+                  <select id="f-category" name="category" required>
+                    <option value="" selected disabled>Выберите номинацию</option>
+                    <option>ИИ-короткий метр</option>
+                    <option>ИИ реклама</option>
+                    <option>Музыкальное ИИ-видео</option>
+                    <option>Гибрид ИИ + живая съёмка</option>
+                  </select>
+                </div>
+                <div class="field field--wide">
+                  <label for="f-link">Ссылка для просмотра фильма *</label>
+                  <input id="f-link" name="screeningLink" type="url" placeholder="https://" maxlength="500" required />
+                  <span class="field__hint">
+                    Проверьте, что ссылка открывается. Фильм должен быть на английском языке или с
+                    английскими субтитрами.
+                  </span>
+                </div>
+                <div class="field">
+                  <label for="f-password">Пароль к ссылке</label>
+                  <input id="f-password" name="screeningPassword" type="text" maxlength="100" autocomplete="off" />
+                </div>
+                <div class="field">
+                  <label for="f-materials">Ссылка на материалы</label>
+                  <input id="f-materials" name="materialsLink" type="url" placeholder="https://" maxlength="500" />
+                  <span class="field__hint">
+                    Постер, кадры, субтитры .srt, сведения о создателях — одной папкой.
+                  </span>
+                </div>
+                <div class="field field--wide">
+                  <label for="f-synopsis">Синопсис *</label>
+                  <textarea id="f-synopsis" name="synopsis" rows="5" maxlength="3000" required></textarea>
+                </div>
+              </div>
+
+              <div class="apply__consent">
+                <label class="check">
+                  <input type="checkbox" name="agreeRules" required />
+                  <span>Я ознакомился с Правилами и условиями участия и принимаю их *</span>
+                </label>
+                <label class="check">
+                  <input type="checkbox" name="agreeData" required />
+                  <span>
+                    Я даю согласие на обработку персональных данных на условиях
+                    <a href="./privacy.html">Политики конфиденциальности</a>, в том числе на их
+                    трансграничную передачу в сервисы Google LLC, где ведётся реестр заявок *
+                  </span>
+                </label>
+              </div>
+
+              <div class="apply__hp" aria-hidden="true">
+                <label for="f-website">Оставьте это поле пустым</label>
+                <input id="f-website" name="website" type="text" tabindex="-1" autocomplete="off" />
+              </div>
+
+              <div class="apply__actions">
+                <button class="btn" type="submit">
+                  Отправить заявку
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <path d="M4 12h15M13 6l6 6-6 6" />
+                  </svg>
+                </button>
+                <p class="apply__status" data-apply-status role="status" aria-live="polite"></p>
+              </div>
+            </form>
+          </section>
         </article>
       </div>
     </main>
@@ -417,6 +533,7 @@
       </div>
     </aside>
 
+    <script src="./assets/js/config.js"></script>
     <script src="./assets/js/site.js"></script>
   </body>
 </html>

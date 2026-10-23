@@ -1921,6 +1921,157 @@ body.menu-open .burger i:nth-child(2) {
   gap: 1.5rem;
 }
 
+/* --- Форма заявки --------------------------------------------------------
+   Живёт в конце страницы регламента. Пока адрес приёмника не прописан в
+   assets/js/config.js, вся секция скрыта атрибутом hidden. */
+.apply {
+  margin-top: clamp(1.5rem, 3vw, 2.5rem);
+}
+.apply__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(1rem, 2vw, 1.6rem);
+}
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  min-width: 0;
+}
+.field--wide {
+  grid-column: 1 / -1;
+}
+.field label {
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.field input,
+.field select,
+.field textarea {
+  font: inherit;
+  font-size: clamp(0.92rem, 1.05vw, 1.02rem);
+  font-weight: 300;
+  color: var(--paper);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 0.85rem 1rem;
+  width: 100%;
+  transition: border-color 0.3s, background-color 0.3s;
+}
+.field textarea {
+  resize: vertical;
+  line-height: 1.6;
+  min-height: 7rem;
+}
+/* стрелка у выпадающего списка: родная в тёмной теме почти не видна */
+.field select {
+  appearance: none;
+  padding-right: 2.6rem;
+  background-image: linear-gradient(45deg, transparent 50%, var(--muted) 50%),
+    linear-gradient(135deg, var(--muted) 50%, transparent 50%);
+  background-position: calc(100% - 1.25rem) 1.25rem, calc(100% - 1rem) 1.25rem;
+  background-size: 5px 5px;
+  background-repeat: no-repeat;
+}
+.field select option {
+  background: var(--ink-2);
+  color: var(--paper);
+}
+.field input:hover,
+.field select:hover,
+.field textarea:hover {
+  background: rgba(255, 255, 255, 0.07);
+}
+.field input:focus-visible,
+.field select:focus-visible,
+.field textarea:focus-visible {
+  outline: none;
+  border-color: var(--accent);
+  background: rgba(255, 255, 255, 0.07);
+}
+/* подсветка ошибки — только после попытки отправки, иначе пустая форма
+   встречает посетителя красными рамками */
+.apply.is-checked :invalid {
+  border-color: var(--accent);
+}
+.field__hint {
+  font-size: 0.78rem;
+  line-height: 1.5;
+  color: var(--muted);
+}
+
+.apply__consent {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  margin-top: clamp(1.4rem, 3vw, 2.2rem);
+}
+.check {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 0.85rem;
+  align-items: start;
+  cursor: pointer;
+}
+.check input {
+  width: 1.15rem;
+  height: 1.15rem;
+  margin: 0.15rem 0 0;
+  accent-color: var(--accent);
+  flex: none;
+}
+.check span {
+  font-size: 0.86rem;
+  line-height: 1.6;
+  color: rgba(239, 234, 226, 0.82);
+}
+
+/* ловушка для ботов: человеку поле не видно и в табуляцию не попадает */
+.apply__hp {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+.apply__actions {
+  margin-top: clamp(1.8rem, 3.5vw, 2.6rem);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1.2rem 1.6rem;
+}
+.apply__status {
+  margin: 0;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  line-height: 1.6;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+  max-width: 34ch;
+}
+.apply__status.is-done {
+  color: var(--paper);
+}
+.apply__status.is-error {
+  color: var(--accent);
+}
+.apply.is-sending button[type='submit'] {
+  opacity: 0.55;
+  pointer-events: none;
+}
+
+@media (max-width: 720px) {
+  .apply__grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 /* --- Мобильные -------------------------------------------------------- */
 @media (max-width: 1024px) {
   .about__grid {

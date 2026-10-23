@@ -102,6 +102,7 @@
             <li><a href="#screenings">Screenings</a></li>
             <li><a href="#misc">Miscellaneous</a></li>
             <li><a href="#legal">Legal matters</a></li>
+            <li data-apply-only hidden><a href="#apply">Submit your film</a></li>
           </ol>
         </aside>
 
@@ -115,6 +116,10 @@
               <dt>Email subject</dt>
               <dd>Submission 2026</dd>
             </dl>
+            <p style="margin: 0" data-apply-only hidden>
+              Or fill in the <a href="#apply">form at the end of this page</a> — it sends the
+              organisers exactly the same details.
+            </p>
             <p style="margin: 0">
               Before submitting a film, please read these Rules and Conditions carefully. By submitting
               your film to the Cyber Kino (ISFF) competition, you clearly understand and agree to these
@@ -372,6 +377,117 @@
               <a class="btn btn--ghost" href="./index.html">Back to home</a>
             </div>
           </section>
+
+          <section id="apply" data-apply-only hidden>
+            <h2>Submit your film</h2>
+            <p>
+              The form sends the organisers exactly the same details as an email. Fields marked with
+              an asterisk are required. A confirmation is sent to the address you provide.
+            </p>
+
+            <form
+              class="apply"
+              id="apply-form"
+              data-msg-sending="Sending your entry…"
+              data-msg-done="Your entry has been sent. A confirmation is on its way to your inbox."
+              data-msg-error="Sending failed. Please try again or email submit@cyber-kino-festival.com."
+            >
+              <div class="apply__grid">
+                <div class="field">
+                  <label for="f-title-en">Film title in English *</label>
+                  <input id="f-title-en" name="titleEn" type="text" maxlength="200" required autocomplete="off" />
+                </div>
+                <div class="field">
+                  <label for="f-title-orig">Title in the original language</label>
+                  <input id="f-title-orig" name="titleOriginal" type="text" maxlength="200" autocomplete="off" />
+                </div>
+                <div class="field">
+                  <label for="f-director">Director *</label>
+                  <input id="f-director" name="director" type="text" maxlength="200" required autocomplete="off" />
+                </div>
+                <div class="field">
+                  <label for="f-applicant">Applicant: name or company *</label>
+                  <input id="f-applicant" name="applicant" type="text" maxlength="200" required autocomplete="name" />
+                </div>
+                <div class="field">
+                  <label for="f-email">Contact e-mail *</label>
+                  <input id="f-email" name="email" type="email" maxlength="200" required autocomplete="email" />
+                </div>
+                <div class="field">
+                  <label for="f-country">Country of production *</label>
+                  <input id="f-country" name="country" type="text" maxlength="100" required autocomplete="country-name" />
+                </div>
+                <div class="field">
+                  <label for="f-duration">Running time, minutes *</label>
+                  <input id="f-duration" name="duration" type="number" min="1" max="30" step="1" required inputmode="numeric" />
+                  <span class="field__hint">Between 1 and 30 minutes.</span>
+                </div>
+                <div class="field">
+                  <label for="f-category">Category *</label>
+                  <select id="f-category" name="category" required>
+                    <option value="" selected disabled>Choose a category</option>
+                    <option>AI Short Film</option>
+                    <option>AI Advertising</option>
+                    <option>AI Music Video</option>
+                    <option>Hybrid: AI + Live Action</option>
+                  </select>
+                </div>
+                <div class="field field--wide">
+                  <label for="f-link">Screening link *</label>
+                  <input id="f-link" name="screeningLink" type="url" placeholder="https://" maxlength="500" required />
+                  <span class="field__hint">
+                    Please check that the link plays. The film must be in English or carry English
+                    subtitles.
+                  </span>
+                </div>
+                <div class="field">
+                  <label for="f-password">Link password</label>
+                  <input id="f-password" name="screeningPassword" type="text" maxlength="100" autocomplete="off" />
+                </div>
+                <div class="field">
+                  <label for="f-materials">Link to materials</label>
+                  <input id="f-materials" name="materialsLink" type="url" placeholder="https://" maxlength="500" />
+                  <span class="field__hint">
+                    Poster, stills, .srt subtitles and catalogue details in a single folder.
+                  </span>
+                </div>
+                <div class="field field--wide">
+                  <label for="f-synopsis">Synopsis *</label>
+                  <textarea id="f-synopsis" name="synopsis" rows="5" maxlength="3000" required></textarea>
+                </div>
+              </div>
+
+              <div class="apply__consent">
+                <label class="check">
+                  <input type="checkbox" name="agreeRules" required />
+                  <span>I have read the Rules and Conditions and accept them *</span>
+                </label>
+                <label class="check">
+                  <input type="checkbox" name="agreeData" required />
+                  <span>
+                    I consent to the processing of my personal data under the
+                    <a href="./privacy.html">Privacy Policy</a>, including its transfer to Google LLC
+                    services, where the register of entries is kept *
+                  </span>
+                </label>
+              </div>
+
+              <div class="apply__hp" aria-hidden="true">
+                <label for="f-website">Please leave this field empty</label>
+                <input id="f-website" name="website" type="text" tabindex="-1" autocomplete="off" />
+              </div>
+
+              <div class="apply__actions">
+                <button class="btn" type="submit">
+                  Send your entry
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <path d="M4 12h15M13 6l6 6-6 6" />
+                  </svg>
+                </button>
+                <p class="apply__status" data-apply-status role="status" aria-live="polite"></p>
+              </div>
+            </form>
+          </section>
         </article>
       </div>
     </main>
@@ -401,6 +517,7 @@
       </div>
     </aside>
 
+    <script src="../assets/js/config.js"></script>
     <script src="../assets/js/site.js"></script>
   </body>
 </html>

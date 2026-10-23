@@ -802,6 +802,76 @@
     sections.forEach((section) => io.observe(section));
   }
 
+  /* --- Форма заявки --------------------------------------------------------
+     Адрес приёмника лежит в assets/js/config.js. Пока он пустой, секция с
+     формой остаётся скрытой и на странице работает только почтовый путь.
+     Отправляем JSON как text/plain: так браузер считает запрос «простым» и не
+     шлёт предварительный OPTIONS, который Google Apps Script не обрабатывает. */
+  function initApplyForm() {
+    const form = $('#apply-form');
+    if (!form) return;
+
+    const cfg = window.CYBER_KINO_FORM || {};
+    const endpoint = String(cfg.endpoint || '').trim();
+    if (!endpoint) return;
+
+    $$('[data-apply-only]').forEach((el) => {
+      el.hidden = false;
+    });
+
+    const status = $('[data-apply-status]', form);
+    const say = (text, mod) => {
+      if (!status) return;
+      status.textContent = text || '';
+      status.classList.toggle('is-done', mod === 'done');
+      status.classList.toggle('is-error', mod === 'error');
+    };
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      form.classList.add('is-checked');
+      if (!form.reportValidity()) return;
+
+      const payload = {
+        key: cfg.key || '',
+        locale: document.documentElement.lang === 'en' ? 'en' : 'ru',
+      };
+      new FormData(form).forEach((value, name) => {
+        payload[name] = typeof value === 'string' ? value.trim() : value;
+      });
+      payload.agreeRules = form.elements.agreeRules.checked;
+      payload.agreeData = form.elements.agreeData.checked;
+
+      form.classList.add('is-sending');
+      say(form.dataset.msgSending);
+
+      fetch(endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify(payload),
+      })
+        .then((res) => {
+          if (!res.ok) throw new Error('http ' + res.status);
+          // ответ может не распарситься (редирект Apps Script) — тогда судим по статусу
+          return res.text().then((text) => {
+            try {
+              return JSON.parse(text);
+            } catch (err) {
+              return { ok: true };
+            }
+          });
+        })
+        .then((data) => {
+          if (!data || data.ok !== true) throw new Error(String((data && data.error) || 'error'));
+          form.reset();
+          form.classList.remove('is-checked');
+          say(form.dataset.msgDone, 'done');
+        })
+        .catch(() => say(form.dataset.msgError, 'error'))
+        .then(() => form.classList.remove('is-sending'));
+    });
+  }
+
   /* --- Год в подвале ------------------------------------------------------- */
   function initYear() {
     $$('[data-year]').forEach((el) => {
@@ -825,6 +895,7 @@
     initLang();
     initConsent();
     initRulesPage();
+    initApplyForm();
     initYear();
     if (window.CyberKino && window.CyberKino.initHero) {
       window.CyberKino.initHero($('.hero__stage'));
