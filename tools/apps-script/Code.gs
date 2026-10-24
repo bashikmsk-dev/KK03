@@ -30,6 +30,12 @@ const FORM_KEY = 'cyber-kino-2026';
 
 /* ===================== Дальше править не нужно ===================== */
 
+/**
+ * Дата версии кода. Её видно, если открыть адрес приёмника в браузере, —
+ * так можно убедиться, что развёрнута свежая версия, а не прежняя.
+ */
+const VERSION = '2026-10-24';
+
 /** Колонки таблицы: подпись в шапке → ключ поля из формы. */
 const COLUMNS = [
   ['Дата и время', 'receivedAt'],
@@ -115,7 +121,7 @@ function doPost(e) {
 
 /** Открыв адрес скрипта в браузере, видно, что он жив. */
 function doGet() {
-  return reply({ ok: true, service: 'cyber-kino-apply' });
+  return reply({ ok: true, service: 'cyber-kino-apply', version: VERSION });
 }
 
 function appendRow(data) {
