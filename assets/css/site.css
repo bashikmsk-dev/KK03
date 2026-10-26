@@ -1246,14 +1246,6 @@ body.menu-open .burger i:nth-child(2) {
   align-items: center;
   gap: clamp(1.4rem, 3vw, 2.4rem);
 }
-.cta__note {
-  max-width: 46ch;
-  font-size: clamp(0.78rem, 1vw, 0.95rem);
-  line-height: 1.7;
-  color: var(--muted);
-  margin: 0;
-}
-
 /* --- Фон из «плывущих» кривых (порт эффекта Background Paths) -------------- */
 /* contain: paint ограничивает перерисовку кривых их же прямоугольником.
    Без transform/will-change: промоушен в отдельный слой ломает порядок
@@ -2259,6 +2251,12 @@ body.menu-open .burger i:nth-child(2) {
 .consent.is-visible {
   opacity: 1;
   transform: none;
+}
+/* при открытом меню плашка легла бы поверх нижних пунктов — убираем её,
+   она вернётся сама, как только меню закроют */
+body.menu-open .consent {
+  opacity: 0;
+  pointer-events: none;
 }
 .consent__card {
   padding: clamp(1.1rem, 2.2vw, 1.45rem);
