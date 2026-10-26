@@ -191,7 +191,7 @@ function confirmToApplicant(data) {
     subject: ru ? 'Кибер Кино: заявка получена' : 'Cyber Kino: submission received',
     htmlBody: ru
       ? '<div style="font-family:Arial,sans-serif;font-size:14px">' +
-        '<p>Здравствуйте! Мы получили заявку на фильм «' +
+        '<p>Здравствуйте! Мы получили заявку на работу «' +
         escapeHtml(data.titleEn) +
         '».</p><p>Уведомление об отборе придёт не позднее чем за две недели до фестиваля. ' +
         'Если нужно что-то дополнить, ответьте на это письмо.</p>' +
