@@ -2042,6 +2042,22 @@ body.menu-open .burger i:nth-child(2) {
   pointer-events: none;
 }
 
+/* запасной путь подачи — письмом; тише формы, но на виду */
+.apply__fallback {
+  margin: clamp(2rem, 4vw, 3rem) 0 0;
+  padding-top: clamp(1.2rem, 2.4vw, 1.8rem);
+  border-top: 1px solid var(--line);
+  font-size: 0.86rem;
+  line-height: 1.7;
+  color: var(--muted);
+}
+.apply__fallback a {
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  word-break: break-word;
+}
+
 @media (max-width: 720px) {
   .apply__grid {
     grid-template-columns: 1fr;
