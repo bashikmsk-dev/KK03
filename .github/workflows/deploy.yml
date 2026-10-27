@@ -79,7 +79,23 @@ jobs:
           chmod 700 ~/.ssh
           printf '%s\n' "$KEY" > ~/.ssh/deploy_key
           chmod 600 ~/.ssh/deploy_key
-          ssh-keyscan -p "${PORT:-22}" -H "$HOST" >> ~/.ssh/known_hosts 2>/dev/null
+          # Ключ сервера узнаём заранее, но падать из-за этого не даём: если
+          # сервер недоступен, понятнее увидеть это на шаге проверки связи,
+          # где видно само сообщение, а не голый код выхода.
+          ssh-keyscan -p "${PORT:-22}" "$HOST" >> ~/.ssh/known_hosts || \
+            echo "ssh-keyscan не смог получить ключ сервера — продолжаем"
+
+      - name: Проверить связь с сервером
+        if: steps.creds.outputs.ready == 'true'
+        env:
+          HOST: ${{ secrets.SPRINTHOST_HOST }}
+          USER: ${{ secrets.SPRINTHOST_USER }}
+          PATH_ON_SERVER: ${{ secrets.SPRINTHOST_PATH }}
+          PORT: ${{ secrets.SPRINTHOST_PORT }}
+        run: |
+          ssh -o BatchMode=yes -o ConnectTimeout=20 -o StrictHostKeyChecking=accept-new \
+            -i ~/.ssh/deploy_key -p "${PORT:-22}" "$USER@$HOST" \
+            "echo подключение есть; pwd; ls -d '$PATH_ON_SERVER'; command -v rsync || echo 'rsync на сервере нет'"
 
       - name: Выложить
         if: steps.creds.outputs.ready == 'true'
@@ -93,7 +109,7 @@ jobs:
           # иначе там копились бы старые хешированные картинки и стили.
           # Поэтому в SPRINTHOST_PATH должен быть именно корень сайта.
           rsync -az --delete --no-perms --no-owner --no-group \
-            -e "ssh -i ~/.ssh/deploy_key -p ${PORT:-22} -o StrictHostKeyChecking=yes" \
+            -e "ssh -i ~/.ssh/deploy_key -p ${PORT:-22} -o StrictHostKeyChecking=accept-new" \
             dist/ "$USER@$HOST:$PATH_ON_SERVER/"
 
       - name: Убрать ключ
