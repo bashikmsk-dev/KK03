@@ -22,6 +22,17 @@ const SHEET_NAME = 'Заявки';
 const SEND_CONFIRMATION = true;
 
 /**
+ * От какого адреса уходят письма и как подписан отправитель.
+ *
+ * Google разрешает отправлять только с адреса аккаунта, которому принадлежит
+ * скрипт, или с его подтверждённого псевдонима. Пока адрес ниже не добавлен
+ * в Gmail как «Отправлять письма как», письма будут уходить с личного адреса
+ * владельца скрипта — ошибки при этом не возникнет, см. sendMail().
+ */
+const SEND_FROM = 'submit@cyber-kino-festival.ru';
+const SENDER_NAME = 'Фестиваль «Кибер Кино»';
+
+/**
  * Простая защита от ботов: ключ, который сайт отправляет вместе с заявкой.
  * Должен совпадать со значением в assets/js/config.js на сайте.
  * Это не пароль — он виден в коде страницы, он лишь отсекает случайный спам.
@@ -34,7 +45,7 @@ const FORM_KEY = 'cyber-kino-2026';
  * Дата версии кода. Её видно, если открыть адрес приёмника в браузере, —
  * так можно убедиться, что развёрнута свежая версия, а не прежняя.
  */
-const VERSION = '2026-10-27';
+const VERSION = '2026-10-28';
 
 /** Колонки таблицы: подпись в шапке → ключ поля из формы. */
 const COLUMNS = [
@@ -126,6 +137,21 @@ function doGet() {
   return reply({ ok: true, service: 'cyber-kino-apply', version: VERSION });
 }
 
+/**
+ * Письмо уходит от имени фестиваля. Если SEND_FROM ещё не подтверждён как
+ * псевдоним, Google отказывается принимать параметр from — тогда отправляем
+ * тем же письмом, но с адреса аккаунта, чтобы заявка не потерялась.
+ */
+function sendMail(options) {
+  const withName = Object.assign({}, options, { name: SENDER_NAME });
+  try {
+    MailApp.sendEmail(Object.assign({}, withName, { from: SEND_FROM }));
+  } catch (err) {
+    console.warn('Отправка от имени ' + SEND_FROM + ' не удалась: ' + err);
+    MailApp.sendEmail(withName);
+  }
+}
+
 function appendRow(data) {
   const book = SpreadsheetApp.getActiveSpreadsheet();
   let sheet = book.getSheetByName(SHEET_NAME);
@@ -173,7 +199,7 @@ function notify(data) {
     );
   }).join('');
 
-  MailApp.sendEmail({
+  sendMail({
     to: NOTIFY_EMAIL,
     replyTo: data.email,
     subject: subject,
@@ -187,7 +213,7 @@ function notify(data) {
 
 function confirmToApplicant(data) {
   const ru = data.locale !== 'en';
-  MailApp.sendEmail({
+  sendMail({
     to: data.email,
     replyTo: NOTIFY_EMAIL,
     subject: ru ? 'Кибер Кино: заявка получена' : 'Cyber Kino: submission received',
