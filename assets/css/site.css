@@ -1764,9 +1764,21 @@ body.menu-open .burger i:nth-child(2) {
   color: var(--paper);
   border-left-color: var(--accent);
 }
+/* пунктов больше двух десятков: на невысоких экранах список прокручивается
+   внутри себя, а не уезжает за край окна */
+@media (min-width: 1025px) {
+  .toc {
+    max-height: calc(100dvh - 9rem);
+    overflow-y: auto;
+    scrollbar-width: thin;
+  }
+}
 
 .doc {
   max-width: 78ch;
+  /* без этого широкая таблица распирает колонку грида вместо того,
+     чтобы прокручиваться внутри своей обёртки */
+  min-width: 0;
 }
 .doc section + section {
   margin-top: clamp(3rem, 6vw, 5rem);
@@ -1853,6 +1865,152 @@ body.menu-open .burger i:nth-child(2) {
 .doc strong {
   color: var(--paper);
   font-weight: 700;
+}
+
+/* --- Пункты Положения ----------------------------------------------------
+   Номер вынесен на поле: висячий отступ делает нумерацию колонкой, не
+   размывая абзац. Ширина поля рассчитана на самый длинный номер (4.5.6). */
+.doc .clause {
+  padding-left: 3.6rem;
+  text-indent: -3.6rem;
+}
+.doc .clause > b:first-child {
+  display: inline-block;
+  width: 3.6rem;
+  text-indent: 0;
+  font-family: var(--mono);
+  font-size: 0.78em;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  color: var(--accent);
+}
+
+/* --- Таблицы в документе -------------------------------------------------- */
+.doc .table-wrap {
+  margin: 0 0 1.6rem;
+  overflow-x: auto;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+}
+.doc table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: clamp(0.82rem, 0.95vw, 0.92rem);
+  line-height: 1.6;
+}
+.doc table.table--wide {
+  min-width: 36rem;
+}
+.doc thead th {
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  font-weight: 400;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--muted);
+  white-space: nowrap;
+}
+.doc th,
+.doc td {
+  text-align: left;
+  vertical-align: top;
+  padding: 0.8rem clamp(0.8rem, 1.6vw, 1.2rem);
+  border-bottom: 1px solid var(--line);
+  color: rgba(239, 234, 226, 0.82);
+}
+.doc tbody th {
+  color: var(--paper);
+  font-weight: 700;
+  width: 30%;
+  min-width: 9rem;
+}
+.doc tbody tr:last-child th,
+.doc tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+/* На телефоне двухколоночные таблицы разворачиваются в строки: иначе узкая
+   первая колонка рвёт длинные подписи на семь строк рядом с короткой датой.
+   Широкие таблицы (номинации) остаются таблицами и прокручиваются вбок. */
+@media (max-width: 560px) {
+  .doc table:not(.table--wide) thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+  }
+  .doc table:not(.table--wide) tr {
+    display: block;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .doc table:not(.table--wide) tbody tr:last-child {
+    border-bottom: 0;
+  }
+  .doc table:not(.table--wide) th,
+  .doc table:not(.table--wide) td {
+    display: block;
+    width: auto;
+    min-width: 0;
+    padding-top: 0.3rem;
+    padding-bottom: 0.3rem;
+    border-bottom: 0;
+  }
+  .doc table:not(.table--wide) td + td {
+    font-size: 0.92em;
+    color: var(--muted);
+  }
+}
+
+/* --- Словарь терминов «под катом» ----------------------------------------- */
+.doc details.terms {
+  margin: 0 0 0.8rem;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--ink-2);
+}
+.doc details.terms[open] {
+  padding-bottom: clamp(0.8rem, 1.6vw, 1.2rem);
+}
+.doc details.terms summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: clamp(0.9rem, 1.8vw, 1.1rem) clamp(1rem, 2vw, 1.4rem);
+  cursor: pointer;
+  font-family: var(--mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--paper);
+  list-style: none;
+  transition: color 0.3s;
+}
+.doc details.terms summary::-webkit-details-marker {
+  display: none;
+}
+.doc details.terms summary::after {
+  content: '+';
+  font-size: 1.1rem;
+  line-height: 1;
+  color: var(--accent);
+  transition: transform 0.35s var(--ease);
+}
+.doc details.terms[open] summary::after {
+  transform: rotate(45deg);
+}
+.doc details.terms summary:hover {
+  color: var(--accent);
+}
+.doc details.terms summary:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+.doc details.terms .table-wrap {
+  margin: 0 clamp(1rem, 2vw, 1.4rem);
+  border-radius: 10px;
 }
 
 .callout {
