@@ -802,6 +802,63 @@
     sections.forEach((section) => io.observe(section));
   }
 
+  /* --- Положение «под катом» -----------------------------------------------
+     Текст свёрнут, под ним сразу форма. Любая ссылка внутрь документа —
+     из оглавления, из плашки, из адресной строки — сначала раскрывает его. */
+  function initRulesCut() {
+    const cut = $('#rules-doc');
+    if (!cut) return;
+
+    const layout = cut.closest('.rules-layout');
+    const sync = () => layout && layout.classList.toggle('is-doc-open', cut.open);
+    cut.addEventListener('toggle', sync);
+    sync();
+
+    /* Прокрутка по вычисленной координате, а не scrollIntoView: раскрытый
+       документ высокий, и во время плавной анимации браузер ещё доверстывает
+       его — анимация к «живой» цели промахивается на сотни пикселей. */
+    const scrollToSection = (target, instant) => {
+      const go = () => {
+        const margin = parseFloat(getComputedStyle(target).scrollMarginTop) || 0;
+        const y = target.getBoundingClientRect().top + window.scrollY - margin;
+        window.scrollTo({ top: Math.max(0, y), behavior: instant || reduced ? 'auto' : 'smooth' });
+      };
+      requestAnimationFrame(() => requestAnimationFrame(go));
+    };
+
+    const targetOf = (hash) => {
+      if (!hash || hash.length < 2) return null;
+      let el = null;
+      try {
+        el = document.getElementById(decodeURIComponent(hash.slice(1)));
+      } catch (err) {
+        return null;
+      }
+      return el && cut.contains(el) ? el : null;
+    };
+
+    document.addEventListener('click', (e) => {
+      const link = e.target.closest && e.target.closest('a[href^="#"]');
+      if (!link) return;
+      const hash = link.getAttribute('href');
+      const target = targetOf(hash);
+      if (!target) return;
+      e.preventDefault();
+      cut.open = true;
+      if (history.pushState) history.pushState(null, '', hash);
+      // документ раскрылся — ждём, пока браузер пересчитает высоту, иначе
+      // плавная прокрутка целится в позицию, которой уже нет
+      scrollToSection(target);
+    });
+
+    // прямой переход по адресу вида /rules.html#ai
+    const atLoad = targetOf(window.location.hash);
+    if (atLoad) {
+      cut.open = true;
+      scrollToSection(atLoad, true);
+    }
+  }
+
   /* --- Форма заявки --------------------------------------------------------
      Адрес приёмника лежит в assets/js/config.js.
      Отправляем JSON как text/plain: так браузер считает запрос «простым» и не
@@ -944,6 +1001,7 @@
     initLang();
     initConsent();
     initRulesPage();
+    initRulesCut();
     initApplyForm();
     initYear();
     if (window.CyberKino && window.CyberKino.initHero) {

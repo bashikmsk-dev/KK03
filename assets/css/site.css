@@ -1963,6 +1963,99 @@ body.menu-open .burger i:nth-child(2) {
   }
 }
 
+/* --- Весь текст Положения «под катом» -------------------------------------
+   Свёрнутый документ — одна полоса, под которой сразу форма. Оглавление
+   слева в этом состоянии не нужно: класс на .rules-layout ставит скрипт. */
+.doc-cut {
+  margin: 0;
+}
+.doc-cut > summary {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.5rem 1.4rem;
+  padding: clamp(1.3rem, 2.6vw, 1.9rem) clamp(1.2rem, 2.4vw, 2rem);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--ink-2);
+  cursor: pointer;
+  list-style: none;
+  transition: border-color 0.3s, background-color 0.3s;
+}
+.doc-cut > summary::-webkit-details-marker {
+  display: none;
+}
+.doc-cut > summary:hover {
+  border-color: rgba(255, 255, 255, 0.28);
+  background: var(--ink-3);
+}
+.doc-cut > summary:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+.doc-cut__title {
+  font-size: clamp(1.1rem, 2.2vw, 1.6rem);
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  text-transform: uppercase;
+  line-height: 1.1;
+  color: var(--paper);
+}
+.doc-cut__hint {
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.doc-cut__hint::after {
+  content: ' — развернуть';
+  color: var(--accent);
+}
+.doc-cut[open] .doc-cut__hint::after {
+  content: ' — свернуть';
+}
+:lang(en) .doc-cut__hint::after {
+  content: ' — open';
+}
+:lang(en) .doc-cut[open] .doc-cut__hint::after {
+  content: ' — close';
+}
+.doc-cut > summary::after {
+  content: '+';
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  justify-self: end;
+  font-size: 1.4rem;
+  line-height: 1;
+  color: var(--accent);
+  transition: transform 0.35s var(--ease);
+}
+.doc-cut[open] > summary::after {
+  transform: rotate(45deg);
+}
+.doc-cut[open] > summary {
+  margin-bottom: clamp(2rem, 4vw, 3rem);
+}
+/* форма идёт сразу за документом — отделяем её так же, как разделы друг от друга */
+.doc .doc-cut + section {
+  margin-top: clamp(3rem, 6vw, 5rem);
+  padding-top: clamp(2rem, 4vw, 3rem);
+  border-top: 1px solid var(--line);
+}
+/* первый раздел внутри уже отделён полосой summary */
+.doc-cut > section:first-of-type {
+  margin-top: 0;
+}
+
+/* свёрнутый документ — оглавление ни к чему, колонка одна */
+.rules-layout:not(.is-doc-open) {
+  grid-template-columns: minmax(0, 1fr);
+}
+.rules-layout:not(.is-doc-open) .toc {
+  display: none;
+}
+
 /* --- Словарь терминов «под катом» ----------------------------------------- */
 .doc details.terms {
   margin: 0 0 0.8rem;
