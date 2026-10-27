@@ -1,22 +1,23 @@
 #!/usr/bin/env python3
 """Генерирует robots.txt и sitemap.xml для сайта «Кибер Кино».
 
-Адрес сайта задан одной константой: при переезде на собственный домен меняем
-её здесь и перезапускаем скрипт — больше нигде домен в этих файлах не зашит.
+Адрес сайта лежит в site.config.json в корне проекта — оттуда же его берёт
+сборка, когда делает абсолютными canonical, hreflang и og-теги. При переезде
+на другой домен меняем адрес там и перезапускаем этот скрипт.
 
 Запуск:  python3 tools/make_seo.py
 """
 
 from __future__ import annotations
 
+import json
 from datetime import date
 from pathlib import Path
 
-# ↓↓↓ при переезде на свой домен меняем только эту строку ↓↓↓
-SITE_URL = "https://kk-03.vercel.app"
-
 ROOT = Path(__file__).resolve().parent.parent
 PUBLIC = ROOT / "public"
+
+SITE_URL = json.loads((ROOT / "site.config.json").read_text(encoding="utf-8"))["siteUrl"].rstrip("/")
 
 # страница → (приоритет, частота обновления); у каждой есть пара на другом языке
 PAGES = [

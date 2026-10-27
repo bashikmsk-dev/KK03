@@ -1,0 +1,4 @@
+{
+  "_comment": "Адрес сайта в одном месте: отсюда его берут сборка (vite.config.js) и генератор robots.txt и sitemap.xml (tools/make_seo.py). При переезде на другой домен меняем только эту строку и запускаем python3 tools/make_seo.py.",
+  "siteUrl": "https://cyber-kino-festival.ru"
+}

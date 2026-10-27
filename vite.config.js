@@ -1,11 +1,15 @@
 import { defineConfig } from 'vite';
 import { cp, readFile, writeFile } from 'node:fs/promises';
+import { createRequire } from 'node:module';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 // package.json объявляет "type": "module", поэтому rootDir нужно получить вручную
 const rootDir = dirname(fileURLToPath(import.meta.url));
 const OUT_DIR = 'dist';
+
+// адрес сайта в одном месте — им же пользуется tools/make_seo.py
+const SITE_URL = createRequire(import.meta.url)('./site.config.json').siteUrl.replace(/\/$/, '');
 
 /**
  * Скрипты сайта подключены как обычные (не module) — благодаря этому
@@ -45,6 +49,64 @@ function absoluteNotFoundLinks() {
         return; // страницы нет в сборке — нечего править
       }
       await writeFile(file, html.replace(/(src|href)="\.\//g, '$1="/'), 'utf8');
+    },
+  };
+}
+
+/**
+ * Относительные canonical, hreflang и og:image годятся для просмотра файлов с
+ * диска, но не для поисковиков и соцсетей: Open Graph требует абсолютных
+ * адресов, иначе мессенджеры не показывают картинку в превью, а относительный
+ * canonical не защищает от дублей, когда на сайт ведёт больше одного домена.
+ *
+ * Поэтому в собранных страницах переводим их в абсолютные — адрес сайта берём
+ * из site.config.json, того же файла, которым пользуется tools/make_seo.py.
+ * Заодно дописываем og:url, которого в исходнике нет: осмысленным он тоже
+ * становится только с доменом.
+ */
+function absoluteSeoLinks(siteUrl) {
+  const PAGES = [
+    ['index.html', '/'],
+    ['rules.html', '/rules.html'],
+    ['privacy.html', '/privacy.html'],
+    ['en/index.html', '/en/'],
+    ['en/rules.html', '/en/rules.html'],
+    ['en/privacy.html', '/en/privacy.html'],
+  ];
+  // адрес страницы вида /en/index.html равен /en/ — так же, как в sitemap.xml
+  const absolute = (href, pagePath) =>
+    new URL(href, siteUrl + pagePath).href.replace(/\/index\.html$/, '/');
+
+  return {
+    name: 'cyber-kino:absolute-seo-links',
+    apply: 'build',
+    async closeBundle() {
+      for (const [file, pagePath] of PAGES) {
+        const full = resolve(rootDir, OUT_DIR, file);
+        let html;
+        try {
+          html = await readFile(full, 'utf8');
+        } catch {
+          continue; // страницы нет в сборке
+        }
+
+        html = html.replace(
+          /(<link\b[^>]*\brel="(?:canonical|alternate)"[^>]*\bhref=")([^"]+)(")/g,
+          (match, head, href, tail) => head + absolute(href, pagePath) + tail
+        );
+        html = html.replace(
+          /(<meta\b[^>]*\bproperty="og:image"[^>]*\bcontent=")([^"]+)(")/g,
+          (match, head, href, tail) => head + absolute(href, pagePath) + tail
+        );
+        if (!html.includes('property="og:url"')) {
+          html = html.replace(
+            /(<meta\s+property="og:type"[^>]*>)/,
+            `$1\n    <meta property="og:url" content="${siteUrl + pagePath}" />`
+          );
+        }
+
+        await writeFile(full, html, 'utf8');
+      }
     },
   };
 }
@@ -101,7 +163,12 @@ export default defineConfig({
   root: rootDir,
   base: './',
   publicDir: 'public',
-  plugins: [keepPageLinks(), copyClassicScripts(), absoluteNotFoundLinks()],
+  plugins: [
+    keepPageLinks(),
+    copyClassicScripts(),
+    absoluteNotFoundLinks(),
+    absoluteSeoLinks(SITE_URL),
+  ],
   server: {
     port: 5173,
     open: false,
