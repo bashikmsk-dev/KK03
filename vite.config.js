@@ -41,18 +41,21 @@ function absoluteNotFoundLinks() {
     name: 'cyber-kino:absolute-404-links',
     apply: 'build',
     async closeBundle() {
-      const file = resolve(rootDir, OUT_DIR, '404.html');
-      let html;
-      try {
-        html = await readFile(file, 'utf8');
-      } catch {
-        return; // страницы нет в сборке — нечего править
+      for (const name of ['404.html', 'en/404.html']) {
+        const file = resolve(rootDir, OUT_DIR, name);
+        let html;
+        try {
+          html = await readFile(file, 'utf8');
+        } catch {
+          continue; // страницы нет в сборке — нечего править
+        }
+        // ../ встречается только в английской версии: она лежит на уровень глубже
+        const absolute = html
+          .replace(/(src|href)="\.{1,2}\//g, '$1="/')
+          // srcset — это список адресов через запятую, одной заменой его не взять
+          .replace(/srcset="([^"]*)"/g, (match, list) => `srcset="${list.replace(/\.{1,2}\//g, '/')}"`);
+        await writeFile(file, absolute, 'utf8');
       }
-      const absolute = html
-        .replace(/(src|href)="\.\//g, '$1="/')
-        // srcset — это список адресов через запятую, одной заменой его не взять
-        .replace(/srcset="([^"]*)"/g, (match, list) => `srcset="${list.replace(/\.\//g, '/')}"`);
-      await writeFile(file, absolute, 'utf8');
     },
   };
 }
@@ -69,6 +72,7 @@ function copyDeployFiles() {
     apply: 'build',
     async closeBundle() {
       await cp(resolve(rootDir, 'deploy/.htaccess'), resolve(rootDir, OUT_DIR, '.htaccess'));
+      await cp(resolve(rootDir, 'deploy/en.htaccess'), resolve(rootDir, OUT_DIR, 'en/.htaccess'));
     },
   };
 }
@@ -209,6 +213,7 @@ export default defineConfig({
         ruRules: resolve(rootDir, 'rules.html'),
         ruPrivacy: resolve(rootDir, 'privacy.html'),
         notFound: resolve(rootDir, '404.html'),
+        notFoundEn: resolve(rootDir, 'en/404.html'),
         en: resolve(rootDir, 'en/index.html'),
         enRules: resolve(rootDir, 'en/rules.html'),
         enPrivacy: resolve(rootDir, 'en/privacy.html'),

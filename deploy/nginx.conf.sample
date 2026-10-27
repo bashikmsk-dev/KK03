@@ -65,6 +65,16 @@ server {
         try_files $uri =404;
     }
 
+    # Внутри английской версии — своя страница 404, иначе на ошибочный
+    # адрес вида /en/опечатка открывалась бы русская.
+    location ^~ /en/ {
+        add_header Cache-Control "public, max-age=0, must-revalidate" always;
+        add_header X-Content-Type-Options "nosniff" always;
+        add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+        error_page 404 /en/404.html;
+        try_files $uri $uri/ =404;
+    }
+
     # .htaccess и прочие точечные файлы наружу не отдаём
     location ~ /\. {
         deny all;
