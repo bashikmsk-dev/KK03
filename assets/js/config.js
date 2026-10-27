@@ -10,7 +10,7 @@ window.CYBER_KINO_FORM = {
   /* Адрес веб-приложения Google Apps Script, которое принимает заявки:
      пишет строку в таблицу и рассылает письма. */
   endpoint:
-    'https://script.google.com/macros/s/AKfycbwfW4O_w8IDqxIPeq0r-FThnK7xmWeqRrx8Q35xtFzK1w0FFP23uEkGx0yVSDrTIfbP/exec',
+    'https://script.google.com/macros/s/AKfycbxnIhF3on55bArbGUjhOM6PFATGVtNlzqgjEbN1-en_SBNRZHHmnn_uIm0DgR53WTk/exec',
 
   /* Тот же ключ должен стоять в Code.gs (константа FORM_KEY).
      Это не пароль — он виден в коде страницы, он лишь отсекает случайный спам. */
