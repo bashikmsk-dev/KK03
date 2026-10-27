@@ -30,7 +30,12 @@ const SEND_CONFIRMATION = true;
  * владельца скрипта — ошибки при этом не возникнет, см. sendMail().
  */
 const SEND_FROM = 'submit@cyber-kino-festival.ru';
-const SENDER_NAME = 'Фестиваль «Кибер Кино»';
+
+/** Подпись отправителя — по языку формы, на котором подана заявка. */
+const SENDER_NAME = {
+  ru: 'Фестиваль «Кибер Кино»',
+  en: '«Cyber Kino» Festival',
+};
 
 /**
  * Простая защита от ботов: ключ, который сайт отправляет вместе с заявкой.
@@ -142,8 +147,9 @@ function doGet() {
  * псевдоним, Google отказывается принимать параметр from — тогда отправляем
  * тем же письмом, но с адреса аккаунта, чтобы заявка не потерялась.
  */
-function sendMail(options) {
-  const withName = Object.assign({}, options, { name: SENDER_NAME });
+function sendMail(options, locale) {
+  const name = SENDER_NAME[locale === 'en' ? 'en' : 'ru'];
+  const withName = Object.assign({}, options, { name: name });
   try {
     MailApp.sendEmail(Object.assign({}, withName, { from: SEND_FROM }));
   } catch (err) {
@@ -208,7 +214,7 @@ function notify(data) {
       '<p>Новая заявка с сайта фестиваля.</p><table>' +
       rows +
       '</table><p style="color:#666">Ответить можно прямо на это письмо — оно уйдёт заявителю.</p></div>',
-  });
+  }, 'ru');
 }
 
 function confirmToApplicant(data) {
@@ -230,7 +236,7 @@ function confirmToApplicant(data) {
         '”.</p><p>Selection notices are sent no later than two weeks before the festival. ' +
         'If you need to add anything, just reply to this email.</p>' +
         '<p>— Cyber Kino Festival</p></div>',
-  });
+  }, data.locale);
 }
 
 function escapeHtml(value) {
