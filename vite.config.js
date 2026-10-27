@@ -48,7 +48,27 @@ function absoluteNotFoundLinks() {
       } catch {
         return; // страницы нет в сборке — нечего править
       }
-      await writeFile(file, html.replace(/(src|href)="\.\//g, '$1="/'), 'utf8');
+      const absolute = html
+        .replace(/(src|href)="\.\//g, '$1="/')
+        // srcset — это список адресов через запятую, одной заменой его не взять
+        .replace(/srcset="([^"]*)"/g, (match, list) => `srcset="${list.replace(/\.\//g, '/')}"`);
+      await writeFile(file, absolute, 'utf8');
+    },
+  };
+}
+
+/**
+ * Конфиг для Apache и LiteSpeed кладём прямо в сборку: так папка dist/
+ * готова к загрузке на обычный хостинг целиком, без ручных шагов.
+ * На nginx этот файл просто лежит без дела (раздачу точечных файлов
+ * закрывает правило из deploy/nginx.conf.sample).
+ */
+function copyDeployFiles() {
+  return {
+    name: 'cyber-kino:copy-deploy-files',
+    apply: 'build',
+    async closeBundle() {
+      await cp(resolve(rootDir, 'deploy/.htaccess'), resolve(rootDir, OUT_DIR, '.htaccess'));
     },
   };
 }
@@ -168,6 +188,7 @@ export default defineConfig({
     copyClassicScripts(),
     absoluteNotFoundLinks(),
     absoluteSeoLinks(SITE_URL),
+    copyDeployFiles(),
   ],
   server: {
     port: 5173,
