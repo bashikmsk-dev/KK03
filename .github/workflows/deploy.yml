@@ -1,0 +1,101 @@
+# Автоматическая выкладка сайта на хостинг по SSH.
+#
+# Работает так же, как раньше работал Vercel: пуш в ветку — и через минуту
+# новая версия на сайте. Отличие в том, что сборка идёт здесь, на раннере
+# GitHub, а наверх уезжает уже готовая папка dist/.
+#
+# Что нужно один раз добавить в настройках репозитория
+# (Settings → Secrets and variables → Actions → New repository secret):
+#
+#   SPRINTHOST_HOST   адрес сервера, например ssh.sprinthost.ru
+#   SPRINTHOST_USER   логин SSH из панели хостинга
+#   SPRINTHOST_PATH   путь до корня сайта на сервере, тот самый, в котором
+#                     должен лежать index.html (обычно оканчивается
+#                     на /public_html)
+#   SPRINTHOST_KEY    приватный SSH-ключ целиком, вместе со строками
+#                     -----BEGIN ... KEY----- и -----END ... KEY-----
+#   SPRINTHOST_PORT   порт SSH, если он не 22 (необязательно)
+#
+# Пока доступы не добавлены, выкладка просто пропускается и сборка остаётся
+# зелёной — чтобы каждый пуш не присылал письмо об ошибке.
+
+name: Выкладка на хостинг
+
+on:
+  push:
+    branches: [claude/cyber-kino-festival-site-phvija]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Собрать сайт
+        run: |
+          npm ci
+          npm run build
+
+      - name: Проверить сборку
+        run: |
+          test -f dist/index.html
+          test -f dist/404.html
+          test -d dist/assets
+          echo "файлов в сборке: $(find dist -type f | wc -l)"
+
+      - name: Проверить, заданы ли доступы
+        id: creds
+        env:
+          HOST: ${{ secrets.SPRINTHOST_HOST }}
+          USER: ${{ secrets.SPRINTHOST_USER }}
+          PATH_ON_SERVER: ${{ secrets.SPRINTHOST_PATH }}
+          KEY: ${{ secrets.SPRINTHOST_KEY }}
+        run: |
+          if [ -n "$HOST" ] && [ -n "$USER" ] && [ -n "$PATH_ON_SERVER" ] && [ -n "$KEY" ]; then
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+            echo "Доступы к хостингу не заданы — выкладка пропущена." >> "$GITHUB_STEP_SUMMARY"
+            echo "Добавьте секреты SPRINTHOST_HOST, SPRINTHOST_USER, SPRINTHOST_PATH и SPRINTHOST_KEY." >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Настроить SSH
+        if: steps.creds.outputs.ready == 'true'
+        env:
+          KEY: ${{ secrets.SPRINTHOST_KEY }}
+          HOST: ${{ secrets.SPRINTHOST_HOST }}
+          PORT: ${{ secrets.SPRINTHOST_PORT }}
+        run: |
+          mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
+          printf '%s\n' "$KEY" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan -p "${PORT:-22}" -H "$HOST" >> ~/.ssh/known_hosts 2>/dev/null
+
+      - name: Выложить
+        if: steps.creds.outputs.ready == 'true'
+        env:
+          HOST: ${{ secrets.SPRINTHOST_HOST }}
+          USER: ${{ secrets.SPRINTHOST_USER }}
+          PATH_ON_SERVER: ${{ secrets.SPRINTHOST_PATH }}
+          PORT: ${{ secrets.SPRINTHOST_PORT }}
+        run: |
+          # --delete убирает с сервера файлы, которых больше нет в сборке:
+          # иначе там копились бы старые хешированные картинки и стили.
+          # Поэтому в SPRINTHOST_PATH должен быть именно корень сайта.
+          rsync -az --delete --no-perms --no-owner --no-group \
+            -e "ssh -i ~/.ssh/deploy_key -p ${PORT:-22} -o StrictHostKeyChecking=yes" \
+            dist/ "$USER@$HOST:$PATH_ON_SERVER/"
+
+      - name: Убрать ключ
+        if: always()
+        run: rm -f ~/.ssh/deploy_key
