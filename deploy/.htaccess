@@ -4,8 +4,18 @@
 # Файл кладётся рядом с index.html, в корень сайта: то есть вместе с
 # содержимым dist/. Переименовывать не нужно, имя .htaccess обязательно.
 
+# Главная страница каталога — только index.html. На виртуальных хостингах
+# Apache по умолчанию предпочитает index.php, и случайно оставшаяся заглушка
+# хостинга показывалась бы вместо сайта.
+DirectoryIndex index.html
+
 # Своя страница 404 на любой несуществующий адрес
 ErrorDocument 404 /404.html
+
+# Архивы и прочие файлы, не относящиеся к сайту, наружу не отдаём
+<FilesMatch "\.(zip|tar|gz|bak|log)$">
+  Require all denied
+</FilesMatch>
 
 <IfModule mod_headers.c>
   Header always set X-Content-Type-Options "nosniff"
