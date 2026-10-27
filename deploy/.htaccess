@@ -41,12 +41,19 @@ ErrorDocument 404 /404.html
 # Кириллица в текстовых файлах
 AddDefaultCharset UTF-8
 
-# www → основной домен и http → https, чтобы у страниц был один адрес.
-# Раскомментируйте, если хостинг не делает это сам.
-# <IfModule mod_rewrite.c>
-#   RewriteEngine On
-#   RewriteCond %{HTTPS} off
-#   RewriteRule ^(.*)$ https://cyber-kino-festival.ru/$1 [R=301,L]
-#   RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
-#   RewriteRule ^(.*)$ https://%1/$1 [R=301,L]
-# </IfModule>
+# Один адрес у сайта. Домены .com и www ведут в ту же папку (алиасами на
+# хостинге), поэтому сводим их к основному адресу перенаправлением — иначе
+# один и тот же сайт открывался бы по нескольким адресам и поисковики
+# выбирали бы между ними сами.
+#
+# Технический адрес хостинга из правила исключён: он нужен, чтобы проверять
+# сайт до переключения домена.
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+
+  RewriteCond %{HTTP_HOST} \.xsph\.ru$ [NC]
+  RewriteRule ^ - [L]
+
+  RewriteCond %{HTTP_HOST} !^cyber-kino-festival\.ru$ [NC]
+  RewriteRule ^(.*)$ https://cyber-kino-festival.ru/$1 [R=301,L]
+</IfModule>
