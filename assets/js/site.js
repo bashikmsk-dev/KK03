@@ -883,6 +883,7 @@
       });
       payload.agreeRules = form.elements.agreeRules.checked;
       payload.agreeData = form.elements.agreeData.checked;
+      payload.agreePublish = form.elements.agreePublish.checked;
       payload.duration = normalizeDuration(payload.duration);
 
       form.classList.add('is-sending');

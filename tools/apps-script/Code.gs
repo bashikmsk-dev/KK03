@@ -34,7 +34,7 @@ const FORM_KEY = 'cyber-kino-2026';
  * Дата версии кода. Её видно, если открыть адрес приёмника в браузере, —
  * так можно убедиться, что развёрнута свежая версия, а не прежняя.
  */
-const VERSION = '2026-10-24';
+const VERSION = '2026-10-27';
 
 /** Колонки таблицы: подпись в шапке → ключ поля из формы. */
 const COLUMNS = [
@@ -55,6 +55,7 @@ const COLUMNS = [
   ['Материалы (постер, кадры, субтитры)', 'materialsLink'],
   ['Согласие с правилами', 'agreeRules'],
   ['Согласие на обработку данных', 'agreeData'],
+  ['Согласие на публикацию', 'agreePublish'],
 ];
 
 /**
@@ -93,7 +94,7 @@ function doPost(e) {
       return reply({ ok: false, error: 'bad-key' });
     }
     // без согласия с правилами и на обработку данных заявку принимать нельзя
-    if (data.agreeRules !== true || data.agreeData !== true) {
+    if (data.agreeRules !== true || data.agreeData !== true || data.agreePublish !== true) {
       return reply({ ok: false, error: 'no-consent' });
     }
 
@@ -107,6 +108,7 @@ function doPost(e) {
     data.receivedAt = Utilities.formatDate(new Date(), 'Europe/Moscow', 'dd.MM.yyyy HH:mm');
     data.agreeRules = data.agreeRules ? 'да' : 'нет';
     data.agreeData = data.agreeData ? 'да' : 'нет';
+    data.agreePublish = data.agreePublish ? 'да' : 'нет';
 
     appendRow(data);
     notify(data);
