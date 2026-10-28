@@ -4,9 +4,11 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Cyber Kino — International AI Short Film Festival</title>
+    <!-- &nbsp; и &#8288; (word joiner) не дают дате разорваться на две строки:
+         ширину карточки ссылки задаёт мессенджер, а не мы. -->
     <meta
       name="description"
-      content="Cyber Kino is an international festival of short films created with artificial intelligence. Moscow, 11–13 December 2026."
+      content="Cyber Kino is an international festival of short films created with artificial intelligence. Moscow, 11–&#8288;13&nbsp;December&nbsp;2026."
     />
     <link rel="canonical" href="./index.html" />
     <link rel="alternate" hreflang="ru" href="../index.html" />
@@ -17,8 +19,15 @@
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <meta property="og:type" content="website" />
     <meta property="og:title" content="Cyber Kino — AI Short Film Festival" />
-    <meta property="og:description" content="We. Future. Cinema. Moscow, 11–13 December 2026." />
+    <meta property="og:description" content="“We. Future. Cinema.” Moscow, 11–&#8288;13&nbsp;December&nbsp;2026." />
     <meta property="og:image" content="../assets/img/og-cover.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Cyber Kino — international AI film festival" />
+    <meta property="og:site_name" content="Cyber Kino" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:locale:alternate" content="ru_RU" />
+    <meta name="twitter:card" content="summary_large_image" />
     <meta name="theme-color" content="#08080a" />
     <link rel="preload" as="image" fetchpriority="high" imagesrcset="../assets/img/enshtane-01-640.webp 640w, ../assets/img/enshtane-01-960.webp 960w, ../assets/img/enshtane-01-1440.webp 1440w" imagesizes="100vw" href="../assets/img/enshtane-01-960.webp" />
     <link rel="preload" as="font" type="font/woff2" href="../assets/fonts/unbounded-latin.woff2" crossorigin />
