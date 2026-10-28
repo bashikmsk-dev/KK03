@@ -32,6 +32,14 @@ ErrorDocument 404 /404.html
   <FilesMatch "\.(js|html|xml|txt)$">
     Header always set Cache-Control "public, max-age=0, must-revalidate"
   </FilesMatch>
+
+  # Иконки сайта — исключение: лежат в корне под постоянными именами, которые
+  # браузеры и поисковики запрашивают сами. Год здесь был бы ловушкой: сменив
+  # иконку, мы не смогли бы показать новую тем, кто уже заходил. Сутки — и
+  # лишних запросов нет, и обновление доходит.
+  <FilesMatch "^(favicon\.ico|icon-192\.png|apple-touch-icon\.png)$">
+    Header always set Cache-Control "public, max-age=86400"
+  </FilesMatch>
 </IfModule>
 
 <IfModule mod_deflate.c>

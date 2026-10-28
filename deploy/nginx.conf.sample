@@ -47,6 +47,17 @@ server {
     gzip_min_length 1024;
     gzip_types text/plain text/css application/javascript application/json image/svg+xml application/xml;
 
+    # Иконки сайта — исключение из правила ниже: они лежат в корне под
+    # постоянными именами, которые браузеры и поисковики запрашивают сами.
+    # Год здесь был бы ловушкой: сменив иконку, мы не смогли бы показать
+    # новую тем, кто уже заходил. Правило стоит выше общего — из нескольких
+    # подходящих регулярных выражений nginx берёт первое.
+    location ~ ^/(?:favicon\.ico|icon-192\.png|apple-touch-icon\.png)$ {
+        add_header Cache-Control "public, max-age=86400" always;
+        add_header X-Content-Type-Options "nosniff" always;
+        try_files $uri =404;
+    }
+
     # Картинки, шрифты и стили собираются с хешем в имени: при изменении
     # меняется адрес, поэтому их можно кэшировать на год.
     location ~* \.(?:css|woff2|webp|avif|jpe?g|png|svg|ico)$ {
