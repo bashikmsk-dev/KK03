@@ -196,8 +196,8 @@ python3 tools/make_seo.py
 Форма живёт в конце страницы регламента (`#apply` в `rules.html` и
 `en/rules.html`). Бэкенда у сайта нет: заявку принимает веб-приложение Google
 Apps Script, привязанное к таблице организатора. Оно пишет строку в Google
-Sheets, шлёт уведомление на `submit@cyber-kino-festival.ru` и подтверждение
-заявителю.
+Sheets и шлёт уведомление на `submit@cyber-kino-festival.ru`. Письмо-подтверждение
+заявителю выключено константой `SEND_CONFIRMATION`.
 
 - `tools/apps-script/Code.gs` — код приёмника, копируется в редактор Apps Script;
 - `tools/apps-script/INSTRUCTION.md` — пошаговая инструкция по настройке;
