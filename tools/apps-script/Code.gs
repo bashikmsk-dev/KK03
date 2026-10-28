@@ -29,7 +29,7 @@ const SEND_CONFIRMATION = true;
  * в Gmail как «Отправлять письма как», письма будут уходить с личного адреса
  * владельца скрипта — ошибки при этом не возникнет, см. sendMail().
  */
-const SEND_FROM = 'submit@cyber-kino-festival.ru';
+const SEND_FROM = 'submit@cyber-kino-festival.com';
 
 /** Подпись отправителя — по языку формы, на котором подана заявка. */
 const SENDER_NAME = {
