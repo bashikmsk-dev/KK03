@@ -20,6 +20,32 @@
     <meta name="theme-color" content="#08080a" />
     <link rel="preload" as="font" type="font/woff2" href="./assets/fonts/unbounded-cyrillic.woff2" crossorigin />
     <link rel="stylesheet" href="./assets/css/site.css" />
+    <!-- Хлебные крошки для поиска: в выдаче вместо длинного адреса страницы
+         показывается путь «Кибер Кино → Регламент». Адреса относительные,
+         в абсолютные их переводит сборка (vite.config.js). -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+              { "@type": "ListItem", "position": 1, "name": "Кибер Кино", "item": "./" },
+              { "@type": "ListItem", "position": 2, "name": "Регламент", "item": "./rules.html" }
+            ]
+          },
+          {
+            "@type": "WebPage",
+            "@id": "./rules.html#webpage",
+            "url": "./rules.html",
+            "name": "Регламент фестиваля «Кибер Кино» 2026",
+            "inLanguage": "ru-RU",
+            "isPartOf": { "@id": "./#website" },
+            "about": { "@id": "./#festival-2026" }
+          }
+        ]
+      }
+    </script>
   </head>
   <body>
     <a class="skip-link" href="#general">Перейти к Положению</a>

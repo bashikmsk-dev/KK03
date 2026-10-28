@@ -87,7 +87,55 @@ function copyDeployFiles() {
  * из site.config.json, того же файла, которым пользуется tools/make_seo.py.
  * Заодно дописываем og:url, которого в исходнике нет: осмысленным он тоже
  * становится только с доменом.
+ *
+ * Та же беда у разметки Schema.org: внутрь <script type="application/ld+json">
+ * Vite не заглядывает совсем, поэтому относительные адреса там остались бы
+ * относительными, а ссылки на картинки — без хеша в имени файла. Разбираем
+ * такие блоки как JSON и чиним каждую строку-адрес: заодно это проверяет, что
+ * разметка вообще корректный JSON, — битая сборка упадёт, а не уедет на сайт.
  */
+/**
+ * Адреса внутри одного блока ld+json. Правило простое: строка, начинающаяся
+ * с «./» или «../», — это адрес. Если он ведёт на картинку из assets/, в
+ * сборке у файла другое имя (Vite дописывает хеш) — берём имя из самой
+ * страницы, где Vite его уже подставил. Всё остальное просто разворачиваем
+ * в абсолютный адрес относительно страницы.
+ */
+function resolveJsonLdUrls(data, html, pagePath, siteUrl, absolute) {
+  const hashed = (href) => {
+    const name = href.slice(href.lastIndexOf('/') + 1);
+    const dot = name.lastIndexOf('.');
+    if (dot <= 0) return null;
+    const base = name.slice(0, dot).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const hit = html.match(new RegExp('assets/' + base + '-[\\w-]+\\.' + name.slice(dot + 1)));
+    return hit ? siteUrl + '/' + hit[0] : null;
+  };
+
+  const walk = (value) => {
+    if (typeof value === 'string') {
+      if (!/^\.{1,2}\//.test(value)) return value;
+      return hashed(value) || absolute(value, pagePath);
+    }
+    if (Array.isArray(value)) return value.map(walk);
+    if (value && typeof value === 'object') {
+      return Object.fromEntries(Object.entries(value).map(([key, item]) => [key, walk(item)]));
+    }
+    return value;
+  };
+
+  return walk(data);
+}
+
+function absoluteJsonLd(html, pagePath, siteUrl, absolute) {
+  return html.replace(
+    /(<script\b[^>]*\btype="application\/ld\+json"[^>]*>)([\s\S]*?)(<\/script>)/g,
+    (match, open, body, close) => {
+      const data = resolveJsonLdUrls(JSON.parse(body), html, pagePath, siteUrl, absolute);
+      return open + JSON.stringify(data) + close;
+    }
+  );
+}
+
 function absoluteSeoLinks(siteUrl) {
   const PAGES = [
     ['index.html', '/'],
@@ -128,6 +176,8 @@ function absoluteSeoLinks(siteUrl) {
             `$1\n    <meta property="og:url" content="${siteUrl + pagePath}" />`
           );
         }
+
+        html = absoluteJsonLd(html, pagePath, siteUrl, absolute);
 
         await writeFile(full, html, 'utf8');
       }

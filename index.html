@@ -25,6 +25,60 @@
     <link rel="preload" as="image" fetchpriority="high" imagesrcset="./assets/img/enshtane-01-640.webp 640w, ./assets/img/enshtane-01-960.webp 960w, ./assets/img/enshtane-01-1440.webp 1440w" imagesizes="100vw" href="./assets/img/enshtane-01-960.webp" />
     <link rel="preload" as="font" type="font/woff2" href="./assets/fonts/unbounded-cyrillic.woff2" crossorigin />
     <link rel="stylesheet" href="./assets/css/site.css" />
+    <!-- Разметка Schema.org: по ней поисковик понимает, что страница про
+         событие, и показывает фестиваль карточкой с датами и городом, а не
+         просто синей ссылкой. Адреса написаны относительными — в абсолютные
+         их переводит сборка (vite.config.js, absoluteJsonLd). -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "Organization",
+            "@id": "./#organization",
+            "name": "Фестиваль «Кибер Кино»",
+            "alternateName": "Cyber Kino Festival",
+            "url": "./",
+            "logo": "./assets/img/logo-720.webp",
+            "email": "info@cyber-kino-festival.ru",
+            "sameAs": ["https://t.me/cyberkinofest", "https://vk.ru/cyberkino"]
+          },
+          {
+            "@type": "WebSite",
+            "@id": "./#website",
+            "url": "./",
+            "name": "Кибер Кино",
+            "inLanguage": "ru-RU",
+            "publisher": { "@id": "./#organization" }
+          },
+          {
+            "@type": "Festival",
+            "@id": "./#festival-2026",
+            "name": "Кибер Кино 2026",
+            "alternateName": "Cyber Kino 2026",
+            "description": "Международный фестиваль короткометражного кино, созданного с помощью искусственного интеллекта.",
+            "url": "./",
+            "image": "./assets/img/og-cover.jpg",
+            "startDate": "2026-12-11",
+            "endDate": "2026-12-13",
+            "eventStatus": "https://schema.org/EventScheduled",
+            "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+            "isAccessibleForFree": true,
+            "inLanguage": ["ru", "en"],
+            "location": {
+              "@type": "Place",
+              "name": "Москва",
+              "address": {
+                "@type": "PostalAddress",
+                "addressLocality": "Москва",
+                "addressCountry": "RU"
+              }
+            },
+            "organizer": { "@id": "./#organization" }
+          }
+        ]
+      }
+    </script>
   </head>
   <body>
     <a class="skip-link" href="#about">Перейти к содержанию</a>
