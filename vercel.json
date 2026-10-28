@@ -2,6 +2,11 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "redirects": [
     {
+      "source": "/",
+      "destination": "https://cyber-kino-festival.ru/",
+      "statusCode": 301
+    },
+    {
       "source": "/:path*",
       "destination": "https://cyber-kino-festival.ru/:path*",
       "statusCode": 301
