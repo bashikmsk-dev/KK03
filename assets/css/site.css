@@ -1313,6 +1313,19 @@ body.menu-open .burger i:nth-child(2) {
   overflow-wrap: break-word;
 }
 /* Важная строка: подложка полностью снимает вопрос читаемости поверх линий */
+/* Строка про перечень Минкультуры. Намеренно тише плашки с адресом площадки:
+   это справка, а не новость, и перетягивать внимание она не должна. */
+.where__official {
+  margin-top: clamp(1rem, 2vw, 1.6rem);
+  max-width: 52ch;
+  font-family: var(--mono);
+  font-size: clamp(0.62rem, 0.9vw, 0.74rem);
+  letter-spacing: 0.12em;
+  line-height: 1.7;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
 .where__note {
   display: inline-block;
   margin-top: clamp(2rem, 4vw, 3rem);
@@ -1554,6 +1567,36 @@ body.menu-open .burger i:nth-child(2) {
 }
 .footer__bottom a:hover {
   color: var(--accent);
+}
+
+/* Правовая строка подвала: сведения о перечне Минкультуры слева, возрастная
+   категория — у правого края. margin-left: auto прижимает знак вправо и тогда,
+   когда строка переносится: на узком экране он уходит под текст, но край
+   держит. */
+.footer__legal {
+  max-width: var(--maxw);
+  margin: 1.1rem auto 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem 1.5rem;
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.14em;
+  line-height: 1.7;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.footer__legal span:first-child {
+  max-width: 68ch;
+}
+.footer__age {
+  margin-left: auto;
+  flex: none;
+  padding: 0.25em 0.55em;
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  letter-spacing: 0.06em;
 }
 
 /* --- Появление при скролле ------------------------------------------------ */
