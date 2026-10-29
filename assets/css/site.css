@@ -1412,7 +1412,7 @@ body.menu-open .burger i:nth-child(2) {
      здесь только мешало бы: оно рвало строки в других местах. */
   margin-top: 0.5rem;
   font-family: var(--mono);
-  font-size: 0.56rem;
+  font-size: 0.74rem;
   font-weight: 400;
   line-height: 1.5;
   letter-spacing: 0.02em;
@@ -1426,7 +1426,7 @@ body.menu-open .burger i:nth-child(2) {
 /* На узких телефонах строка не помещается в плитку целиком — чуть мельче */
 @media (max-width: 389px) {
   .social__fine {
-    font-size: 0.5rem;
+    font-size: 0.66rem;
   }
 }
 
