@@ -58,6 +58,7 @@ npm run dev
 | --- | --- | --- |
 | `Logo.png` | `assets/img/logo.png` | настоящий |
 | Логотип-петля | `assets/img/logo-loop.jpg` | настоящий, мастер-копия для иконки сайта |
+| Обложка для ссылок | `assets/img/og-cover.jpg` | настоящая, собрана из `enshtane-02.png` |
 | `Enshtane 01.png` | `assets/img/enshtane-01.png` | настоящий |
 | `Enshtane 02.png` | `assets/img/enshtane-02.png` | настоящий |
 | Эйнштейн для страницы 404 | `assets/img/enshtane-404.png` | настоящий, вырезка с прозрачным фоном |
@@ -67,6 +68,24 @@ npm run dev
 | `khaletskiy.png` | `assets/img/jury/khaletskiy.png` | настоящий |
 | `trifonov.png` | `assets/img/jury/trifonov.png` | настоящий |
 | `Logo Mini white.png` | `assets/img/logo-mini-white.png` | **заглушка**, ждём файл (320 × 320, прозрачный фон) |
+
+### Обложка для ссылок
+
+`assets/img/og-cover.jpg` на самом сайте нигде не показывается — её берут
+мессенджеры и соцсети, когда кто-то присылает ссылку на фестиваль. Размер
+1200 × 630: это пропорция, при которой Telegram и ВКонтакте разворачивают
+картинку во всю ширину карточки, а не показывают кружком сбоку.
+
+Собрана из титульной картинки главной страницы:
+
+```bash
+convert assets/img/enshtane-02.png -resize 1200x630^ -gravity center \
+  -extent 1200x630 -strip -quality 86 assets/img/og-cover.jpg
+```
+
+Взят именно `enshtane-02` — тот кадр, который на главной проступает под
+курсором: лицо на нём читается. На `enshtane-01` портрет рассыпан на кубики,
+и в ленте мессенджера он превращался в непонятное пятно.
 
 ### Имена жюри внутри картинки
 
