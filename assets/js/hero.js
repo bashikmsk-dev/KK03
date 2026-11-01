@@ -94,7 +94,12 @@ window.CyberKino.initHero = function initHero(stage) {
     else start();
   };
 
-  /* Автоматическое «дыхание» маски там, где курсора нет: тач и reduced-motion. */
+  /* Осталось от прежнего поведения: на тач-экранах маска «дышала» сама.
+     Сейчас не вызывается — на таких экранах второй кадр показывается целиком
+     средствами CSS, без маски и без анимации. Причина в том, что кадры 01 и 02
+     сняты с разной крупностью: пока круг гулял, лицо то росло, то уменьшалось,
+     и это читалось как сбой. Код оставлен на случай, если кадры когда-нибудь
+     приведут к одной крупности и эффект захочется вернуть. */
   const auto = (time) => {
     if (!autoStart) autoStart = time;
     const t = (time - autoStart) / 1000;
@@ -118,9 +123,10 @@ window.CyberKino.initHero = function initHero(stage) {
       return;
     }
     if (coarse.matches) {
-      setActive(true);
-      autoStart = 0;
-      autoRaf = requestAnimationFrame(auto);
+      // Второй кадр показывает CSS, здесь только снимаем класс мыши:
+      // is-revealing включает кольцо, а на тач-экране оно не нужно.
+      setActive(false);
+      measure();
     }
   };
 

@@ -572,6 +572,28 @@ body.menu-open .burger i:nth-child(2) {
   );
 }
 
+/* На тач-экранах курсора нет, и маска там водилась сама по себе. Выглядело это
+   плохо: кадры 01 и 02 сняты с разной крупностью, и пока круг гулял по экрану,
+   лицо на глазах то увеличивалось, то уменьшалось — читалось как сбой, а не
+   как эффект. Поэтому на телефоне показываем сразу второй кадр целиком: он
+   чёткий и крупный, это и так то, что видно почти всё время. Маску снимаем,
+   кольцо прячем — указывать ему не на что. Анимацию при этом не запускает и
+   hero.js, так что постоянного requestAnimationFrame на телефоне больше нет. */
+@media (hover: none), (pointer: coarse) {
+  .hero__img--reveal {
+    opacity: 1;
+    will-change: auto;
+  }
+  .hero__stage[data-reveal-mode='outside'] .hero__img--reveal,
+  .hero__stage[data-reveal-mode='lens'] .hero__img--reveal {
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+  .hero__ring {
+    display: none;
+  }
+}
+
 /* Затемняющая вуаль под заголовком — читаемость поверх картинки */
 .hero__stage::after {
   content: '';
