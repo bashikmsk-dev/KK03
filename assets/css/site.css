@@ -382,13 +382,37 @@ button {
   border-bottom-color: var(--line);
 }
 
+/* Полоса-продолжение подложки вверх, за границу экрана.
+   Зачем: в Safari на iOS, когда адресная строка свёрнута в «таблетку»,
+   страница поднимается под неё, а position: fixed остаётся привязан к верху
+   прежнего, меньшего вьюпорта. Шапка из-за этого оказывается ниже верхней
+   кромки, и над ней открывается кусок фотографии героя — выглядит так, будто
+   шапка отклеилась от верха. В любом другом состоянии и в любом другом
+   браузере эта полоса лежит выше границы экрана и не видна совсем.
+   220px взято с запасом: разрыв на айфоне около 100. */
+.header::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 100%;
+  height: 220px;
+  pointer-events: none;
+  background: transparent;
+  transition: background 0.4s var(--ease);
+}
+.header.is-stuck::before {
+  background: rgba(8, 8, 10, 0.92);
+}
+
 /* Пока открыто мобильное меню, шапка прозрачная: фон закрывает сама панель.
    Предупреждение на будущее: backdrop-filter, transform и filter делают
    элемент containing block для потомков с position: fixed. Панель меню лежит
    внутри шапки, и от любого из них она сожмётся до высоты шапки, а пункты
    вывалятся поверх страницы. Если что-то из этого здесь появится — гасить
    нужно в этом же правиле. */
-body.menu-open .header {
+body.menu-open .header,
+body.menu-open .header::before {
   background: transparent;
   border-bottom-color: transparent;
 }
