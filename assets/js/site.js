@@ -985,7 +985,19 @@
     });
   }
 
+  /* --- Снятие плашек с истёкшим сроком ------------------------------------
+     Дата лежит в разметке (data-until), а не здесь: менять её нужно в HTML
+     обеих версий, зато без правки скрипта. Иначе сайт продолжал бы обещать
+     приём заявок и после дедлайна — а это уже не опечатка, а дезинформация. */
+  function initDeadlines() {
+    $$('[data-until]').forEach((el) => {
+      const until = Date.parse(el.dataset.until);
+      if (!Number.isNaN(until) && Date.now() > until) el.remove();
+    });
+  }
+
   document.addEventListener('DOMContentLoaded', () => {
+    initDeadlines();
     initHeader();
     initSplitTitle();
     initReveal();
