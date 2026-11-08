@@ -8,7 +8,7 @@
          ширину карточки ссылки задаёт мессенджер, а не мы. -->
     <meta
       name="description"
-      content="«Кибер Кино» — международный фестиваль короткометражного кино, созданного с помощью искусственного интеллекта. Москва, 11–&#8288;13&nbsp;декабря&nbsp;2026."
+      content="«Кибер Кино» — международный фестиваль короткометражного кино, созданного с помощью искусственного интеллекта. Первый фестиваль — в 2027&nbsp;году."
     />
     <link rel="canonical" href="./index.html" />
     <link rel="alternate" hreflang="ru" href="./index.html" />
@@ -68,27 +68,15 @@
           },
           {
             "@type": "Festival",
-            "@id": "./#festival-2026",
-            "name": "Кибер Кино 2026",
-            "alternateName": "Cyber Kino 2026",
-            "description": "Международный фестиваль короткометражного кино, созданного с помощью искусственного интеллекта.",
+            "@id": "./#festival",
+            "name": "Кибер Кино",
+            "alternateName": "Cyber Kino",
+            "description": "Международный фестиваль короткометражного кино, созданного с помощью искусственного интеллекта. Первый фестиваль — в 2027 году.",
             "url": "./",
             "image": "./assets/img/og-cover.jpg",
-            "startDate": "2026-12-11",
-            "endDate": "2026-12-13",
-            "eventStatus": "https://schema.org/EventScheduled",
-            "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+            "eventStatus": "https://schema.org/EventPostponed",
             "isAccessibleForFree": true,
             "inLanguage": ["ru", "en"],
-            "location": {
-              "@type": "Place",
-              "name": "Москва",
-              "address": {
-                "@type": "PostalAddress",
-                "addressLocality": "Москва",
-                "addressCountry": "RU"
-              }
-            },
             "organizer": { "@id": "./#organization" }
           }
         ]
@@ -101,7 +89,7 @@
     <header class="header">
       <a class="brand" href="./index.html" aria-label="Кибер Кино — на главную">
         <img src="./assets/img/logo-mini-white-280.webp" srcset="./assets/img/logo-mini-white-140.webp 140w, ./assets/img/logo-mini-white-280.webp 280w" sizes="68px" width="280" height="168" decoding="async" alt="Логотип фестиваля «Кибер Кино»" />
-        <span>Кибер Кино<br />2026</span>
+        <span>Кибер Кино<br />2027</span>
       </a>
 
       <nav class="nav" id="nav" aria-label="Основное меню">
@@ -133,17 +121,16 @@
           <div class="hero__ring" aria-hidden="true"></div>
         </div>
 
-        <!-- Дата дедлайна стоит в data-until: после неё плашку убирает site.js,
-             чтобы сайт не обещал приём, который уже закрыт. -->
+        <!-- Срок на плашке не указан: фестиваль переносится, даты пока неизвестны.
+             Когда они появятся, дату возвращают атрибутом data-until — по нему
+             site.js сам снимет плашку, как только срок пройдёт. -->
         <a
           class="hero__badge"
           href="./rules.html#apply"
-          data-until="2026-11-27T23:59:59+03:00"
-          aria-label="Приём заявок на участие открыт до 27 ноября 2026 года. Перейти к форме"
+          aria-label="Приём заявок открыт. Перейти к форме подачи"
         >
-          <span class="hero__badge-line">Приём заявок</span>
-          <span class="hero__badge-date">до 27 ноября</span>
-          <span class="hero__badge-line">Подать работу</span>
+          <span class="hero__badge-line">Приём заявок открыт</span>
+          <span class="hero__badge-date">Подать заявку</span>
         </a>
 
         <div class="hero__content">
@@ -160,7 +147,7 @@
         <div class="marquee__track">
           <span>Мы. Будущее. Кино.</span>
           <span>AI Short Film Festival</span>
-          <span>Кибер Кино 2026</span>
+          <span>Кибер Кино 2027</span>
         </div>
       </div>
 
@@ -325,7 +312,7 @@
       <div class="marquee marquee--accent slant slant--rev" aria-hidden="true">
         <div class="marquee__track">
           <span>Жюри фестиваля</span>
-          <span>Кибер Кино 2026</span>
+          <span>Кибер Кино 2027</span>
         </div>
       </div>
 
@@ -463,17 +450,17 @@
         <div class="wrap">
           <div class="reveal">
             <p class="eyebrow">Где и когда</p>
-            <h2 class="display h-xl">Москва<br />2026</h2>
+            <h2 class="display h-xl">Фестиваль<br />2027</h2>
           </div>
 
           <div class="where__grid reveal">
             <div class="where__item">
               <h3>Место проведения</h3>
-              <p>г. Москва</p>
+              <p>Будет объявлено</p>
             </div>
             <div class="where__item">
               <h3>Даты мероприятия</h3>
-              <p>11–13 декабря 2026</p>
+              <p>Будут объявлены</p>
             </div>
             <div class="where__item">
               <h3>Формат</h3>
@@ -481,7 +468,7 @@
             </div>
           </div>
 
-          <p class="where__note">Адрес площадки фестиваля скоро будет объявлен</p>
+          <p class="where__note">Первый фестиваль пройдёт в 2027 году</p>
           <p class="where__official">
             Фестиваль включён в перечень международных кинофестивалей Минкультуры России,
             строка 214

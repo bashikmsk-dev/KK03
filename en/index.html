@@ -8,7 +8,7 @@
          ширину карточки ссылки задаёт мессенджер, а не мы. -->
     <meta
       name="description"
-      content="Cyber Kino is an international festival of short films created with artificial intelligence. Moscow, 11–&#8288;13&nbsp;December&nbsp;2026."
+      content="Cyber Kino is an international festival of short films created with artificial intelligence. The first festival takes place in 2027."
     />
     <link rel="canonical" href="./index.html" />
     <link rel="alternate" hreflang="ru" href="../index.html" />
@@ -64,27 +64,15 @@
           },
           {
             "@type": "Festival",
-            "@id": "./#festival-2026",
-            "name": "Cyber Kino 2026",
-            "alternateName": "Кибер Кино 2026",
-            "description": "An international festival of short films created with artificial intelligence.",
+            "@id": "./#festival",
+            "name": "Cyber Kino",
+            "alternateName": "Кибер Кино",
+            "description": "An international festival of short films created with artificial intelligence. The first festival takes place in 2027.",
             "url": "./",
             "image": "../assets/img/og-cover.jpg",
-            "startDate": "2026-12-11",
-            "endDate": "2026-12-13",
-            "eventStatus": "https://schema.org/EventScheduled",
-            "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+            "eventStatus": "https://schema.org/EventPostponed",
             "isAccessibleForFree": true,
             "inLanguage": ["ru", "en"],
-            "location": {
-              "@type": "Place",
-              "name": "Moscow",
-              "address": {
-                "@type": "PostalAddress",
-                "addressLocality": "Moscow",
-                "addressCountry": "RU"
-              }
-            },
             "organizer": { "@id": "./#organization" }
           }
         ]
@@ -97,7 +85,7 @@
     <header class="header">
       <a class="brand" href="./index.html" aria-label="Cyber Kino — home">
         <img src="../assets/img/logo-mini-white-280.webp" srcset="../assets/img/logo-mini-white-140.webp 140w, ../assets/img/logo-mini-white-280.webp 280w" sizes="68px" width="280" height="168" decoding="async" alt="Cyber Kino festival logo" />
-        <span>Cyber Kino<br />2026</span>
+        <span>Cyber Kino<br />2027</span>
       </a>
 
       <nav class="nav" id="nav" aria-label="Main menu">
@@ -129,17 +117,16 @@
           <div class="hero__ring" aria-hidden="true"></div>
         </div>
 
-        <!-- The deadline lives in data-until: site.js removes the badge once it
-             passes, so the site never advertises a closed call. -->
+        <!-- No deadline on the badge: the festival is being moved and the dates
+             are not known yet. Once they are, the date goes back into data-until
+             and site.js removes the badge again when it passes. -->
         <a
           class="hero__badge"
           href="./rules.html#apply"
-          data-until="2026-11-27T23:59:59+03:00"
-          aria-label="Entries are open until 27 November 2026. Go to the form"
+          aria-label="Entries are open. Go to the submission form"
         >
-          <span class="hero__badge-line">Entries open</span>
-          <span class="hero__badge-date">until 27 Nov</span>
-          <span class="hero__badge-line">Submit a work</span>
+          <span class="hero__badge-line">Entries are open</span>
+          <span class="hero__badge-date">Submit a work</span>
         </a>
 
         <div class="hero__content">
@@ -156,7 +143,7 @@
         <div class="marquee__track">
           <span>We. The Future. Cinema.</span>
           <span>AI Short Film Festival</span>
-          <span>Cyber Kino 2026</span>
+          <span>Cyber Kino 2027</span>
         </div>
       </div>
 
@@ -460,17 +447,17 @@
         <div class="wrap">
           <div class="reveal">
             <p class="eyebrow">Where &amp; when</p>
-            <h2 class="display h-xl">Moscow<br />2026</h2>
+            <h2 class="display h-xl">Festival<br />2027</h2>
           </div>
 
           <div class="where__grid reveal">
             <div class="where__item">
               <h3>Venue</h3>
-              <p>Moscow</p>
+              <p>To be announced</p>
             </div>
             <div class="where__item">
               <h3>Event dates</h3>
-              <p>11–13 December 2026</p>
+              <p>To be announced</p>
             </div>
             <div class="where__item">
               <h3>Format</h3>
@@ -478,7 +465,7 @@
             </div>
           </div>
 
-          <p class="where__note">The festival venue will be announced soon</p>
+          <p class="where__note">The first festival takes place in 2027</p>
           <p class="where__official">
             The festival is included in the Russian Ministry of Culture list of international
             film festivals, entry 214
