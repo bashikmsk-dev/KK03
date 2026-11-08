@@ -8,7 +8,7 @@
          ширину карточки ссылки задаёт мессенджер, а не мы. -->
     <meta
       name="description"
-      content="«Кибер Кино» — международный фестиваль короткометражного кино, созданного с помощью искусственного интеллекта. Первый фестиваль — в 2027&nbsp;году."
+      content="«Кибер Кино» — международный фестиваль короткометражного кино, созданного с помощью искусственного интеллекта. Москва, весна 2027&nbsp;года."
     />
     <link rel="canonical" href="./index.html" />
     <link rel="alternate" hreflang="ru" href="./index.html" />
@@ -19,10 +19,10 @@
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <meta property="og:type" content="website" />
     <!-- Заголовок и описание карточки привязаны к приёму заявок: пока он идёт,
-         это и есть то, зачем человеку переходить. После 27 ноября 2026 их нужно
+         это и есть то, зачем человеку переходить. Когда приём закроется, их нужно
          вернуть к рассказу о фестивале — скрипт тут не поможет, сборщики превью
          читают разметку как есть и JS не исполняют. -->
-    <meta property="og:title" content="Кибер Кино — приём заявок до 27&nbsp;ноября" />
+    <meta property="og:title" content="Кибер Кино — приём заявок открыт" />
     <meta property="og:description" content="Международный фестиваль ИИ-видео: короткий метр, реклама, музыкальное видео, гибрид с живой съёмкой. Участие бесплатное, от 18 лет, любая страна." />
     <meta property="og:image" content="./assets/img/og-cover.jpg" />
     <meta property="og:image:width" content="1200" />
@@ -71,12 +71,18 @@
             "@id": "./#festival",
             "name": "Кибер Кино",
             "alternateName": "Cyber Kino",
-            "description": "Международный фестиваль короткометражного кино, созданного с помощью искусственного интеллекта. Первый фестиваль — в 2027 году.",
+            "description": "Международный фестиваль короткометражного кино, созданного с помощью искусственного интеллекта. Первый фестиваль — весной 2027 года в Москве.",
             "url": "./",
             "image": "./assets/img/og-cover.jpg",
             "eventStatus": "https://schema.org/EventPostponed",
+            "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
             "isAccessibleForFree": true,
             "inLanguage": ["ru", "en"],
+            "location": {
+              "@type": "Place",
+              "name": "Москва",
+              "address": { "@type": "PostalAddress", "addressLocality": "Москва", "addressCountry": "RU" }
+            },
             "organizer": { "@id": "./#organization" }
           }
         ]
@@ -450,17 +456,17 @@
         <div class="wrap">
           <div class="reveal">
             <p class="eyebrow">Где и когда</p>
-            <h2 class="display h-xl">Фестиваль<br />2027</h2>
+            <h2 class="display h-xl">Москва<br />2027</h2>
           </div>
 
           <div class="where__grid reveal">
             <div class="where__item">
               <h3>Место проведения</h3>
-              <p>Будет объявлено</p>
+              <p>г. Москва</p>
             </div>
             <div class="where__item">
               <h3>Даты мероприятия</h3>
-              <p>Будут объявлены</p>
+              <p>Весна 2027</p>
             </div>
             <div class="where__item">
               <h3>Формат</h3>
@@ -468,10 +474,9 @@
             </div>
           </div>
 
-          <p class="where__note">Первый фестиваль пройдёт в 2027 году</p>
+          <p class="where__note">Точные даты будут объявлены позже</p>
           <p class="where__official">
-            Фестиваль включён в перечень международных кинофестивалей Минкультуры России,
-            строка 214
+            Фестиваль включён в перечень кинофестивалей Минкультуры России
           </p>
         </div>
       </section>
@@ -538,7 +543,7 @@
         <a href="./privacy.html">Политика конфиденциальности</a>
       </div>
       <div class="footer__legal">
-        <span>Перечень международных кинофестивалей Минкультуры России, строка 214 — приказ от 24.12.2025 № 2461</span>
+        <span>Включён в перечень кинофестивалей Минкультуры России</span>
         <span class="footer__age">16+</span>
       </div>
     </footer>

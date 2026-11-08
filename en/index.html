@@ -8,7 +8,7 @@
          ширину карточки ссылки задаёт мессенджер, а не мы. -->
     <meta
       name="description"
-      content="Cyber Kino is an international festival of short films created with artificial intelligence. The first festival takes place in 2027."
+      content="Cyber Kino is an international festival of short films created with artificial intelligence. Moscow, spring 2027."
     />
     <link rel="canonical" href="./index.html" />
     <link rel="alternate" hreflang="ru" href="../index.html" />
@@ -19,10 +19,10 @@
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <meta property="og:type" content="website" />
     <!-- Title and description are tied to the open call: while it runs, that is
-         the reason to click. After 27 November 2026 they go back to describing
+         the reason to click. Once the call closes they go back to describing
          the festival — script cannot help here, preview crawlers read the markup
          as served and do not run JS. -->
-    <meta property="og:title" content="Cyber Kino — entries open until 27&nbsp;November" />
+    <meta property="og:title" content="Cyber Kino — entries are open" />
     <meta property="og:description" content="International AI video festival: short films, ads, music videos, hybrid with live action. Free entry, 18+, any country." />
     <meta property="og:image" content="../assets/img/og-cover.jpg" />
     <meta property="og:image:width" content="1200" />
@@ -67,12 +67,18 @@
             "@id": "./#festival",
             "name": "Cyber Kino",
             "alternateName": "Кибер Кино",
-            "description": "An international festival of short films created with artificial intelligence. The first festival takes place in 2027.",
+            "description": "An international festival of short films created with artificial intelligence. The first festival takes place in spring 2027 in Moscow.",
             "url": "./",
             "image": "../assets/img/og-cover.jpg",
             "eventStatus": "https://schema.org/EventPostponed",
+            "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
             "isAccessibleForFree": true,
             "inLanguage": ["ru", "en"],
+            "location": {
+              "@type": "Place",
+              "name": "Moscow",
+              "address": { "@type": "PostalAddress", "addressLocality": "Moscow", "addressCountry": "RU" }
+            },
             "organizer": { "@id": "./#organization" }
           }
         ]
@@ -447,17 +453,17 @@
         <div class="wrap">
           <div class="reveal">
             <p class="eyebrow">Where &amp; when</p>
-            <h2 class="display h-xl">Festival<br />2027</h2>
+            <h2 class="display h-xl">Moscow<br />2027</h2>
           </div>
 
           <div class="where__grid reveal">
             <div class="where__item">
               <h3>Venue</h3>
-              <p>To be announced</p>
+              <p>Moscow</p>
             </div>
             <div class="where__item">
               <h3>Event dates</h3>
-              <p>To be announced</p>
+              <p>Spring 2027</p>
             </div>
             <div class="where__item">
               <h3>Format</h3>
@@ -465,10 +471,9 @@
             </div>
           </div>
 
-          <p class="where__note">The first festival takes place in 2027</p>
+          <p class="where__note">Exact dates will be announced later</p>
           <p class="where__official">
-            The festival is included in the Russian Ministry of Culture list of international
-            film festivals, entry 214
+            The festival is included in the Russian Ministry of Culture list of film festivals
           </p>
         </div>
       </section>
@@ -535,7 +540,7 @@
         <a href="./privacy.html">Privacy policy</a>
       </div>
       <div class="footer__legal">
-        <span>Russian Ministry of Culture list of international film festivals, entry 214 — order No. 2461 of 24.12.2025</span>
+        <span>Included in the Russian Ministry of Culture list of film festivals</span>
         <span class="footer__age">16+</span>
       </div>
     </footer>
