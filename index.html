@@ -71,10 +71,11 @@
             "@id": "./#festival",
             "name": "Кибер Кино",
             "alternateName": "Cyber Kino",
-            "description": "Международный фестиваль короткометражного кино, созданного с помощью искусственного интеллекта. Первый фестиваль — весной 2027 года в Москве.",
+            "description": "Международный фестиваль кино, созданного с помощью искусственного интеллекта. Первый фестиваль — весной 2027 года в Москве. Идёт приём заявок.",
             "url": "./",
             "image": "./assets/img/og-cover.jpg",
-            "eventStatus": "https://schema.org/EventPostponed",
+            "startDate": "2027",
+            "eventStatus": "https://schema.org/EventScheduled",
             "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
             "isAccessibleForFree": true,
             "inLanguage": ["ru", "en"],
@@ -82,6 +83,16 @@
               "@type": "Place",
               "name": "Москва",
               "address": { "@type": "PostalAddress", "addressLocality": "Москва", "addressCountry": "RU" }
+            },
+            "offers": {
+              "@type": "Offer",
+              "name": "Приём заявок на участие",
+              "description": "Приём заявок открыт. Участие бесплатное, от 18 лет, любая страна.",
+              "url": "./rules.html#apply",
+              "price": "0",
+              "priceCurrency": "RUB",
+              "availability": "https://schema.org/InStock",
+              "validFrom": "2026-10-26"
             },
             "organizer": { "@id": "./#organization" }
           }
